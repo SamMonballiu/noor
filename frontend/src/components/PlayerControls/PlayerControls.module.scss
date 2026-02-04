@@ -1,0 +1,22 @@
+@import "../mixins";
+.controls {
+  @include flex();
+  font-size: 24px;
+  gap: 36px;
+
+  svg {
+    @include btn();
+  }
+
+  .mainBtn {
+    font-size: 36px;
+  }
+}
+
+@media (orientation: portrait) {
+  .controls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}

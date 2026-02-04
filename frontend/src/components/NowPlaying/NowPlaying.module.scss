@@ -1,0 +1,28 @@
+.playing {
+  display: flex;
+  gap: 8px;
+
+  .cover {
+    height: 48px;
+    width: 48px;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+
+    .track {
+      font-weight: 600;
+    }
+
+    .artist {
+      opacity: 0.65;
+    }
+  }
+}
+
+@media (orientation: portrait) {
+  .playing {
+    display: none;
+  }
+}

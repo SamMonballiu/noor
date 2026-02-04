@@ -1,0 +1,41 @@
+.progress {
+  position: absolute;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+
+  progress {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+
+    height: 4px;
+    transition: height 200ms;
+    width: 100vw;
+
+    &:hover {
+      height: 10px;
+    }
+  }
+
+  progress[value]::-webkit-progress-bar {
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 200ms;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+    }
+  }
+
+  progress[value]::-webkit-progress-value {
+    background: linear-gradient(
+      0deg,
+      rgba(253, 187, 45, 1) 0%,
+      rgba(255, 251, 143, 1) 50%,
+      rgba(253, 187, 45, 1) 100%
+    );
+  }
+}

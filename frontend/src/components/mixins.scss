@@ -1,0 +1,14 @@
+@mixin btn() {
+  opacity: 1;
+  transition: opacity 200ms;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+@mixin flex() {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

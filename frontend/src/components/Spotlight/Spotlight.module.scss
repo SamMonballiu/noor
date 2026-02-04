@@ -1,0 +1,40 @@
+.spotlight {
+  background: rgb(16, 16, 18);
+  background: radial-gradient(
+    circle,
+    rgba(44, 40, 44, 1) 0%,
+    rgba(31, 31, 33, 1) 100%
+  );
+  flex-grow: 1;
+
+  display: none;
+}
+
+@media (orientation: portrait) {
+  .spotlight {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 80vw;
+      top: 0;
+      left: 0;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
+    }
+
+    .info {
+      --size: 1.2rem;
+      .track {
+        font-size: var(--size);
+        font-weight: 600;
+        display: block;
+      }
+
+      .album {
+        display: block;
+      }
+    }
+  }
+}
