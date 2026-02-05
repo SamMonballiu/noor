@@ -18,6 +18,7 @@ export const Spotlight: FC<SpotlightProps> = ({
     <section className={styles.spotlight}>
       <div>
         <img src={imageUrl} />
+        <img src={imageUrl} className={styles.background} />
         <div className={styles.info}>
           <span className={styles.track}>{trackName}</span>
           <span className={styles.album}>{albumName}</span>
