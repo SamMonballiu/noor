@@ -13,6 +13,8 @@ interface ControlsProps {
   onNext: () => void;
   onSeek: (position: number) => void;
   onToggleQueue: () => void;
+  onClickPlaying: () => void;
+  onVolumeChanged: (value: number) => void;
 }
 
 export const Controls: FC<ControlsProps> = ({
@@ -23,13 +25,15 @@ export const Controls: FC<ControlsProps> = ({
   onNext,
   onSeek,
   onToggleQueue,
+  onClickPlaying,
+  onVolumeChanged,
 }) => {
   return (
     <section className={styles.bottom}>
       <ProgressBar value={progress} onSeek={onSeek} />
 
       <section className={styles.btm}>
-        <NowPlaying />
+        <NowPlaying onClick={onClickPlaying} />
 
         <PlayerControls
           isPlaying={isPlaying}
@@ -38,7 +42,10 @@ export const Controls: FC<ControlsProps> = ({
           onNext={onNext}
         />
 
-        <PlayerOptions onToggleQueue={onToggleQueue} />
+        <PlayerOptions
+          onToggleQueue={onToggleQueue}
+          onVolumeChanged={onVolumeChanged}
+        />
       </section>
     </section>
   );

@@ -16,6 +16,7 @@ body {
 
 .top {
   display: flex;
+  z-index: 100;
 
   background: rgb(36, 37, 40);
   border-bottom: 1px solid rgb(56, 57, 60);
@@ -66,5 +67,9 @@ body {
     border-left: 1px solid rgb(56, 57, 60);
     padding: 24px 36px;
     width: 20vw;
+  }
+
+  .hidden {
+    display: none;
   }
 }
