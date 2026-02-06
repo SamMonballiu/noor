@@ -1,28 +1,24 @@
 import { type FC } from "react";
 import styles from "./Spotlight.module.scss";
+import type { Metadata } from "../../models";
+import { useAlbumCoverQuery } from "../../query";
 
 interface SpotlightProps {
-  imageUrl: string;
-  trackName: string;
-  albumName: string;
-  artistName: string;
+  track: Metadata;
 }
 
-export const Spotlight: FC<SpotlightProps> = ({
-  imageUrl,
-  trackName,
-  albumName,
-  artistName,
-}) => {
+export const Spotlight: FC<SpotlightProps> = ({ track }) => {
+  const { data: cover } = useAlbumCoverQuery(track.albumPath);
+
   return (
     <section className={styles.spotlight}>
       <div>
-        <img src={imageUrl} />
-        <img src={imageUrl} className={styles.background} />
+        <img src={cover} />
+        <img src={cover} className={styles.background} />
         <div className={styles.info}>
-          <span className={styles.track}>{trackName}</span>
-          <span className={styles.album}>{albumName}</span>
-          <span className={styles.artist}>{artistName}</span>
+          <span className={styles.track}>{track.title}</span>
+          <span className={styles.album}>{track.album}</span>
+          <span className={styles.artist}>{track.artists?.join(", ")}</span>
         </div>
       </div>
     </section>

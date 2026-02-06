@@ -1,4 +1,4 @@
-import { useMemo, type FC } from "react";
+import { useMemo, useState, type FC } from "react";
 import { useRoutes } from "../../hooks/useRoutes";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
@@ -6,10 +6,20 @@ import { useAlbumsQuery } from "../../query";
 import type { AlbumData, Metadata } from "../../models";
 import { ImagePreview } from "../ImagePreview/ImagePreview";
 import styles from "./AlbumTrackList.module.scss";
+import cx from "classnames";
+import { FaPlay } from "react-icons/fa";
 
-export const AlbumTrackList: FC = () => {
+interface Props {
+  onPlay: (track: Metadata) => void;
+}
+
+export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
   const { route } = useRoutes();
   const { data, isLoading } = useAlbumsQuery();
+
+  const [selectedTrackIndex, setSelectedTrackIndex] = useState<number | null>(
+    null,
+  );
 
   const album = useMemo<AlbumData & { tracks: Metadata[] }>(() => {
     const empty = {
@@ -56,18 +66,42 @@ export const AlbumTrackList: FC = () => {
         </section>
       </section>
       <section className={styles.tracks}>
-        {album.tracks.map((t) => (
-          <Track key={t.number} {...t} />
+        {album.tracks.map((t, idx) => (
+          <Track
+            key={t.number}
+            {...t}
+            onPlay={() => onPlay(t)}
+            onSelect={() => setSelectedTrackIndex(idx)}
+            isSelected={selectedTrackIndex === idx}
+          />
         ))}
       </section>
     </div>
   );
 };
 
-const Track: FC<Metadata> = ({ number, title, artists }) => {
+type TrackProps = Metadata & {
+  onPlay: () => void;
+  onSelect: () => void;
+  isSelected: boolean;
+};
+
+const Track: FC<TrackProps> = ({
+  number,
+  title,
+  artists,
+  onPlay,
+  onSelect,
+  isSelected,
+}) => {
   return (
-    <div className={styles.track}>
-      <span className={styles.number}>{number}</span>
+    <div
+      className={cx(styles.track, { [styles.selected]: isSelected })}
+      onClick={isSelected ? onPlay : onSelect}
+    >
+      <div className={styles.number}>
+        {isSelected ? <FaPlay /> : <span>{number}</span>}
+      </div>
       <div>
         <div className={styles.title}>{title}</div>
         <span className={styles.artists}>{artists?.join(",")}</span>

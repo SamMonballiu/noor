@@ -13,7 +13,7 @@ export const useAlbumsQuery = () =>
     },
   });
 
-export const useAlbumCoverQuery = (path: string, enabled: boolean) =>
+export const useAlbumCoverQuery = (path: string, enabled?: boolean) =>
   useQuery({
     queryKey: ["thumbnail", path],
     queryFn: async ({ signal }) => {

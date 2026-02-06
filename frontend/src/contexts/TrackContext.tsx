@@ -5,16 +5,11 @@ import {
   type FC,
   type ReactNode,
 } from "react";
+import type { Metadata } from "../models";
 
-interface TrackData {
-  trackName: string;
-  artistName: string;
-  albumName: string;
-  imageUrl: string;
-}
-
-interface TrackContextType extends TrackData {
-  setTrackData: (data: TrackData) => void;
+interface TrackContextType {
+  track: Metadata | null;
+  setTrackData: (data: Metadata) => void;
 }
 
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
@@ -32,15 +27,10 @@ interface TrackProviderProps {
 }
 
 export const TrackProvider: FC<TrackProviderProps> = ({ children }) => {
-  const [trackData, setTrackData] = useState<TrackData>({
-    trackName: "In Your Palace",
-    artistName: "The Cribs",
-    albumName: "24/7 Rock Star Shit",
-    imageUrl: "http://raspberrypi:4004/cribs.jpg",
-  });
+  const [trackData, setTrackData] = useState<Metadata | null>(null);
 
   return (
-    <TrackContext.Provider value={{ ...trackData, setTrackData }}>
+    <TrackContext.Provider value={{ track: trackData, setTrackData }}>
       {children}
     </TrackContext.Provider>
   );

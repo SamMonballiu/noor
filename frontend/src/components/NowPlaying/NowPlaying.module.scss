@@ -3,8 +3,10 @@
   gap: 8px;
 
   .cover {
-    height: 48px;
-    width: 48px;
+    img {
+      height: 48px;
+      width: 48px;
+    }
   }
 
   .info {

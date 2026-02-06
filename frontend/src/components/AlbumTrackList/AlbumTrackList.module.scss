@@ -50,6 +50,10 @@
   width: 60vw;
 }
 
+.selected {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .track {
   display: flex;
   gap: 16px;
@@ -58,14 +62,15 @@
   user-select: none;
   transition: background 200ms;
 
-  &:hover {
+  &:hover:not(.selected) {
     background: rgba(255, 255, 255, 0.05);
   }
+
   .number {
     text-align: right;
     opacity: 0.6;
     font-size: clamp(0.85rem, 1.5vw, 0.95rem);
-    max-width: 2ch;
+    width: 3ch;
   }
 
   .title {
@@ -91,6 +96,10 @@
     img {
       width: 20vw;
     }
+  }
+
+  .tracks {
+    width: 90%;
   }
 
   .track {
