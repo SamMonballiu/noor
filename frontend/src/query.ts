@@ -8,9 +8,24 @@ export const useAlbumsQuery = (callback: (data: AlbumResponse) => void) =>
     queryKey: ["albums"],
     queryFn: async () => {
       const response = await axios.get<AlbumResponse>(
-        "http://raspberrypi:54321/api/albums",
+        `${import.meta.env.VITE_DEVPREFIX}/api/albums`,
       );
       callback(response.data);
       return response.data;
     },
+  });
+
+export const useAlbumCoverQuery = (path: string, enabled: boolean) =>
+  useQuery({
+    queryKey: ["thumbnail", path],
+    queryFn: async ({ signal }) => {
+      const fetchUrl = `${import.meta.env.VITE_DEVPREFIX}/api/cover?albumPath=${encodeURIComponent(path)}`;
+      const response = (
+        await axios.get(fetchUrl, { responseType: "blob", signal })
+      ).data;
+      const imageObjectUrl = URL.createObjectURL(response);
+      return imageObjectUrl;
+    },
+    staleTime: Infinity,
+    enabled,
   });
