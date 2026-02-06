@@ -1,0 +1,48 @@
+$padding: 24px;
+$gap: 48px;
+$albums-per-row: 5;
+$dim: calc(
+  (100vw - ($padding * 2) - ($gap * ($albums-per-row - 1))) / $albums-per-row
+);
+
+.container {
+  padding: $padding;
+  display: flex;
+  gap: $gap;
+  flex-wrap: wrap;
+
+  background: rgb(16, 16, 18);
+  background: radial-gradient(
+    circle,
+    rgba(44, 40, 44, 1) 0%,
+    rgba(31, 31, 33, 1) 100%
+  );
+}
+
+.album {
+  user-select: none;
+  p {
+    width: $dim;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  .title {
+    font-weight: 600;
+  }
+
+  .cover {
+    width: $dim;
+    height: $dim;
+    img {
+      width: $dim;
+      height: $dim;
+    }
+    object-fit: contain;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+  }
+}

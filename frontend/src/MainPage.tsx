@@ -3,6 +3,7 @@ import styles from "./MainPage.module.scss";
 import { Controls } from "./components/Controls/Controls";
 import { Spotlight } from "./components/Spotlight/Spotlight";
 import { useTrack } from "./contexts/TrackContext";
+import { AlbumsList } from "./components/AlbumsList/AlbumsList";
 
 export const MainPage: FC = () => {
   const { trackName, artistName, albumName, imageUrl } = useTrack();
@@ -19,7 +20,9 @@ export const MainPage: FC = () => {
   return (
     <div className={styles.container}>
       <section className={styles.main}>
-        <section className={styles.items}>items</section>
+        <section className={styles.items}>
+          <AlbumsList />
+        </section>
         <Spotlight
           imageUrl={imageUrl}
           trackName={trackName}
@@ -28,6 +31,7 @@ export const MainPage: FC = () => {
         />
         {showQueue && <section className={styles.queue}>queue</section>}
       </section>
+
       <Controls
         isPlaying={isPlaying}
         progress={progress}

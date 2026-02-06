@@ -1,0 +1,27 @@
+$imageHeight: 70vh;
+$imageWidth: 75vw;
+//$border: 1px solid rgb(200, 200, 200);
+
+.container {
+  min-height: inherit;
+}
+
+.image {
+  max-height: $imageHeight;
+  max-width: $imageWidth;
+  object-fit: cover;
+  //border: $border;
+}
+
+.preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: inherit;
+  height: 100%;
+
+  svg {
+    font-size: 4em;
+    //opacity: 0.05;
+  }
+}

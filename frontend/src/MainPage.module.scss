@@ -18,6 +18,7 @@ body {
   flex-grow: 1;
   background: yellow;
   width: 100%;
+  min-height: 0;
 
   display: flex;
 
@@ -28,6 +29,10 @@ body {
       rgba(44, 40, 44, 1) 0%,
       rgba(31, 31, 33, 1) 100%
     );
+
+    overflow-y: auto;
+    min-height: 0;
+
     flex-grow: 1;
   }
 
