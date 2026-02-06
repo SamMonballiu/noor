@@ -8,6 +8,7 @@ import { Metadata } from "./models/metadata";
 import { mapGetAlbumsRoute } from "./features/albums/get/getAlbumsRoute";
 import { DataContext } from "./models/dataContext";
 import { mapGetCoverRoute } from "./features/covers/get/getCoverRoute";
+import path from "path";
 
 const port = 54321;
 
@@ -35,12 +36,17 @@ const dataContext: DataContext = {
 mapGetAlbumsRoute(apiRouter, dataContext);
 mapGetCoverRoute(apiRouter, dataContext);
 
+// All other routes to be handled clientside
+app.get("*", (_, res: Response) => {
+  res.sendFile(path.join(__dirname, "/public", "index.html"));
+});
+
 app.listen(port, async () => {
   console.log(`Server started on port ${port}.`);
 
   const folder = process.env.MEDIA_PATH;
   const directoryCrawler = new fdir()
-    .withMaxDepth(1)
+    .withMaxDepth(10)
     .withRelativePaths()
     .crawl(folder);
 
