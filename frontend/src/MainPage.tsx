@@ -9,19 +9,23 @@ import { routes } from "./routing";
 import { useRoutes } from "./hooks/useRoutes";
 import { AlbumTrackList } from "./components/AlbumTrackList/AlbumTrackList";
 import { useNavigation } from "./hooks/useNavigation";
+import { useAudioPlayer } from "./hooks/useAudioPlayer";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
+import { MdMusicNote, MdPerson } from "react-icons/md";
+import cx from "classnames";
 
 export const MainPage: FC = () => {
   const { track, setTrackData } = useTrack();
-  const [progress, setProgress] = useState(0.505);
   const [showQueue, setShowQueue] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
 
-  const handlePlayPause = () => setIsPlaying(!isPlaying);
-  const handlePrevious = () => console.log("Previous");
-  const handleNext = () => console.log("Next");
-  const handleSeek = (position: number) => setProgress(position);
+  const { play, togglePlayPause, seek, isPlaying, progress } = useAudioPlayer();
+
+  const handlePlay = (track: Parameters<typeof setTrackData>[0]) => {
+    setTrackData(track);
+    play(track);
+  };
+
   const handleToggleQueue = () => setShowQueue(!showQueue);
 
   const { route } = useRoutes();
@@ -29,12 +33,22 @@ export const MainPage: FC = () => {
 
   return (
     <div className={styles.container}>
+      <section className={styles.top}>
+        <div className={cx({ [styles.active]: route.is.album })}>
+          <MdMusicNote
+            onClick={() => navigate.to(routes.albums, { album: "" })}
+          />
+        </div>
+        <div>
+          <MdPerson style={{ opacity: 0.25 }} />
+        </div>
+      </section>
       <section className={styles.main}>
         <section className={styles.items}>
           <Switch>
             <Route path={routes.albums}>
               {route.params.album ? (
-                <AlbumTrackList onPlay={setTrackData} />
+                <AlbumTrackList onPlay={handlePlay} />
               ) : (
                 <AlbumsList
                   onSelect={(albumName) =>
@@ -60,10 +74,10 @@ export const MainPage: FC = () => {
       <Controls
         isPlaying={isPlaying}
         progress={progress}
-        onPlayPause={handlePlayPause}
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-        onSeek={handleSeek}
+        onPlayPause={togglePlayPause}
+        onPrevious={() => console.log("Previous")}
+        onNext={() => console.log("Next")}
+        onSeek={seek}
         onToggleQueue={handleToggleQueue}
       />
     </div>
