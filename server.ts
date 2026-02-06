@@ -5,6 +5,8 @@ import cors from "cors";
 const { fdir } = require("fdir");
 import { parseFile } from "music-metadata";
 import { Metadata } from "./models/metadata";
+import { mapGetAlbumsRoute } from "./features/albums/get/getAlbumsRoute";
+import { DataContext } from "./models/dataContext";
 
 const port = 54321;
 
@@ -22,25 +24,14 @@ app.use(
   }),
 );
 
-const mediaFiles: Metadata[] = [];
+const apiRouter = express.Router();
+app.use("/api", apiRouter);
 
-const group = {
-  byAlbum: (metadata: Metadata[]): Record<string, Metadata[]> =>
-    metadata.reduce(
-      (acc, val) => {
-        const album = val.album ?? "none";
-        acc[album] ??= [] as Metadata[];
-        acc[album].push(val);
-
-        return acc;
-      },
-      {} as Record<string, Metadata[]>,
-    ),
+const dataContext: DataContext = {
+  mediaFiles: [],
 };
 
-app.get("/test", async (_, res: Response) => {
-  res.send(group.byAlbum(mediaFiles));
-});
+mapGetAlbumsRoute(apiRouter, dataContext);
 
 app.listen(port, async () => {
   console.log(`Server started on port ${port}.`);
@@ -52,27 +43,29 @@ app.listen(port, async () => {
     .crawl(folder);
 
   const crawled = directoryCrawler.sync();
-  const filtered = crawled.filter((path: string) => path.endsWith(".mp3"));
+  const extensions = [".mp3", ".ogg"];
+  const filtered = crawled.filter((path: string) =>
+    extensions.some((ext) => path.endsWith(ext)),
+  );
 
   console.log(`Parsing ${filtered.length} files.`);
 
   for (const filePath of filtered) {
-    if (filePath.endsWith(".mp3")) {
-      const fullPath = `${folder}/${filePath}`;
-      const metadata = await parseFile(fullPath, {
-        skipCovers: true,
-      });
-      mediaFiles.push({
-        number: metadata.common.track.no ?? undefined,
-        title: metadata.common.title,
-        album: metadata.common.album,
-        artists: metadata.common.artists,
-        year: metadata.common.year ?? undefined,
-        genre: metadata.common.genre,
-        duration: metadata.format.duration,
-        path: fullPath,
-      });
-    }
+    const fullPath = `${folder}/${filePath}`;
+    const metadata = await parseFile(fullPath, {
+      skipCovers: true,
+    });
+    dataContext.mediaFiles.push({
+      number: metadata.common.track.no ?? undefined,
+      title: metadata.common.title,
+      album: metadata.common.album,
+      artists: metadata.common.artists,
+      year: metadata.common.year ?? undefined,
+      genre: metadata.common.genre,
+      duration: metadata.format.duration,
+      path: fullPath,
+      albumPath: fullPath.split("/").slice(0, -1).join("/"),
+    });
   }
   console.log("Done.");
 });

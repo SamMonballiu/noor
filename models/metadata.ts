@@ -7,4 +7,5 @@ export interface Metadata {
   genre?: string[];
   duration?: number;
   path: string;
+  albumPath: string;
 }
