@@ -4,6 +4,13 @@ import { Controls } from "./components/Controls/Controls";
 import { Spotlight } from "./components/Spotlight/Spotlight";
 import { useTrack } from "./contexts/TrackContext";
 import { AlbumsList } from "./components/AlbumsList/AlbumsList";
+import { Route, Switch } from "wouter";
+import { routes } from "./routing";
+import { useRoutes } from "./hooks/useRoutes";
+import { AlbumTrackList } from "./components/AlbumTrackList/AlbumTrackList";
+import { useNavigation } from "./hooks/useNavigation";
+//@ts-ignore
+import friendlyUrl from "friendly-url-extended";
 
 export const MainPage: FC = () => {
   const { trackName, artistName, albumName, imageUrl } = useTrack();
@@ -17,18 +24,35 @@ export const MainPage: FC = () => {
   const handleSeek = (position: number) => setProgress(position);
   const handleToggleQueue = () => setShowQueue(!showQueue);
 
+  const { route } = useRoutes();
+  const { navigate } = useNavigation();
+
   return (
     <div className={styles.container}>
       <section className={styles.main}>
         <section className={styles.items}>
-          <AlbumsList />
+          <Switch>
+            <Route path={routes.albums}>
+              {route.params.album ? (
+                <AlbumTrackList />
+              ) : (
+                <AlbumsList
+                  onSelect={(albumName) =>
+                    navigate.to(routes.albums, {
+                      album: friendlyUrl(albumName),
+                    })
+                  }
+                />
+              )}
+            </Route>
+          </Switch>
         </section>
-        <Spotlight
+        {/* <Spotlight
           imageUrl={imageUrl}
           trackName={trackName}
           albumName={albumName}
           artistName={artistName}
-        />
+        /> */}
         {showQueue && <section className={styles.queue}>queue</section>}
       </section>
 

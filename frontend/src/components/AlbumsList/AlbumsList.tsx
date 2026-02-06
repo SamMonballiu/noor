@@ -2,15 +2,14 @@ import { useState, type FC } from "react";
 import styles from "./AlbumsList.module.scss";
 import { ImagePreview } from "../ImagePreview/ImagePreview";
 import { useAlbumsQuery } from "../../query";
+//@ts-ignore
+import friendlyUrl from "friendly-url-extended";
+import type { AlbumData } from "../../models";
 
-interface AlbumData {
-  title: string;
-  artists: string[];
-  year?: number;
-  path: string;
+interface Props {
+  onSelect: (albumName: string) => void;
 }
-
-export const AlbumsList: FC = () => {
+export const AlbumsList: FC<Props> = ({ onSelect }) => {
   const [albumData, setAlbumData] = useState<AlbumData[]>([]);
 
   useAlbumsQuery((data) => {
@@ -36,7 +35,11 @@ export const AlbumsList: FC = () => {
   return (
     <div className={styles.container}>
       {albumData.sort(byArtist).map((album) => (
-        <Album key={album.title} data={album} />
+        <Album
+          key={album.title}
+          data={album}
+          onSelect={() => onSelect(album.title)}
+        />
       ))}
     </div>
   );
@@ -44,10 +47,11 @@ export const AlbumsList: FC = () => {
 
 interface AlbumProps {
   data: AlbumData;
+  onSelect: () => void;
 }
-const Album: FC<AlbumProps> = ({ data }) => {
+const Album: FC<AlbumProps> = ({ data, onSelect }) => {
   return (
-    <div className={styles.album}>
+    <div className={styles.album} onClick={onSelect}>
       <ImagePreview path={data.path} className={styles.cover} />
       <p className={styles.title}>{data.title}</p>
       <p>{data.artists.join(", ")}</p>

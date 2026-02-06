@@ -1,0 +1,101 @@
+.container {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  height: 81vh;
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  user-select: none;
+
+  .details {
+    display: block;
+  }
+
+  h1,
+  h4,
+  h5 {
+    margin: 0;
+  }
+
+  h1 {
+    font-size: clamp(1rem, 12vw, 3rem);
+  }
+
+  h5 {
+    opacity: 0.5;
+  }
+}
+
+.cover {
+  img {
+    width: 12vw;
+    object-fit: contain;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+  }
+}
+
+.tracks {
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4vh 0;
+  padding-left: 4vw;
+  padding-bottom: 0;
+  width: 60vw;
+}
+
+.track {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 4px 12px;
+  user-select: none;
+  transition: background 200ms;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .number {
+    text-align: right;
+    opacity: 0.6;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    max-width: 2ch;
+  }
+
+  .title {
+    font-size: clamp(0.9rem, 1.7vw, 1.2rem);
+  }
+
+  .artists {
+    opacity: 0.5;
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+  }
+}
+
+@media (orientation: portrait) {
+  .top {
+    gap: 16px;
+
+    h1 {
+      font-size: 7vw;
+    }
+  }
+
+  .cover {
+    img {
+      width: 20vw;
+    }
+  }
+
+  .track {
+    .number {
+      width: 12vw;
+    }
+  }
+}

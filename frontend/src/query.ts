@@ -2,15 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import type { AlbumResponse } from "./models";
 
-export const useAlbumsQuery = (callback: (data: AlbumResponse) => void) =>
+export const useAlbumsQuery = (callback?: (data: AlbumResponse) => void) =>
   useQuery<AlbumResponse>({
-    staleTime: Infinity,
     queryKey: ["albums"],
     queryFn: async () => {
       const response = await axios.get<AlbumResponse>(
         `${import.meta.env.VITE_DEVPREFIX}/api/albums`,
       );
-      callback(response.data);
+      callback?.(response.data);
       return response.data;
     },
   });
