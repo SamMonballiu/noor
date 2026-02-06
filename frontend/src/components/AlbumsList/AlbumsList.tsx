@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { useMemo, type FC } from "react";
 import styles from "./AlbumsList.module.scss";
 import { ImagePreview } from "../ImagePreview/ImagePreview";
 import { useAlbumsQuery } from "../../query";
@@ -10,18 +10,23 @@ interface Props {
   onSelect: (albumName: string) => void;
 }
 export const AlbumsList: FC<Props> = ({ onSelect }) => {
-  const [albumData, setAlbumData] = useState<AlbumData[]>([]);
+  const { data, isLoading } = useAlbumsQuery();
 
-  useAlbumsQuery((data) => {
+  const albumData = useMemo<AlbumData[]>(() => {
+    if (isLoading || !data) {
+      return [];
+    }
+
+    let result: AlbumData[] = [];
     for (const key of Object.keys(data)) {
       const artists = data[key].reduce((acc, val) => {
         for (const artist of val.artists ?? []) {
           if (!acc.includes(artist)) acc.push(artist);
         }
         return acc;
-      }, []);
+      }, [] as string[]);
 
-      albumData.push({
+      result.push({
         title: key,
         artists,
         year: data[key][0].year,
@@ -29,8 +34,8 @@ export const AlbumsList: FC<Props> = ({ onSelect }) => {
       });
     }
 
-    setAlbumData(albumData);
-  });
+    return result;
+  }, [data, isLoading]);
 
   return (
     <div className={styles.container}>
