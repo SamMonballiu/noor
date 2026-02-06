@@ -9,6 +9,7 @@ import { mapGetAlbumsRoute } from "./features/albums/get/getAlbumsRoute";
 import { DataContext } from "./models/dataContext";
 import { mapGetCoverRoute } from "./features/covers/get/getCoverRoute";
 import path from "path";
+import { mapGetAudioRoute } from "./features/audio/get/getAudioRoute";
 
 const port = 54321;
 
@@ -35,6 +36,7 @@ const dataContext: DataContext = {
 
 mapGetAlbumsRoute(apiRouter, dataContext);
 mapGetCoverRoute(apiRouter, dataContext);
+mapGetAudioRoute(apiRouter, dataContext);
 
 // All other routes to be handled clientside
 app.get("*", (_, res: Response) => {
