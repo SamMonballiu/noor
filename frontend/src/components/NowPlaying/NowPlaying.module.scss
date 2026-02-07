@@ -24,7 +24,7 @@
 }
 
 @media (orientation: portrait) {
-  .playing {
-    display: none;
+  .info {
+    display: none !important;
   }
 }

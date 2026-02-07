@@ -12,3 +12,12 @@
   align-items: center;
   gap: 12px;
 }
+
+@mixin clickable() {
+  cursor: pointer;
+  opacity: 0.5;
+
+  &:hover {
+    opacity: 1;
+  }
+}

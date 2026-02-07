@@ -82,7 +82,8 @@ export const MainPage: FC = () => {
         {mode === "spotlight" && track ? (
           <Spotlight
             track={track!}
-            onClose={() => {
+            onClose={() => setMode("content")}
+            onAlbumClick={() => {
               setMode("content");
               navigate.to(routes.albums, {
                 album: friendlyUrl(track.album),

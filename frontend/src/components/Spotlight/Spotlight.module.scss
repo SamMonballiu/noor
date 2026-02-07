@@ -1,3 +1,5 @@
+@use "../mixins.scss";
+
 .spotlight {
   background: rgb(16, 16, 18);
   background: radial-gradient(
@@ -6,47 +8,78 @@
     rgba(31, 31, 33, 1) 100%
   );
   flex-grow: 1;
+}
 
-  display: none;
+.content {
+  z-index: 10;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 36px;
+  right: 12px;
+  font-size: 2rem;
+  @include mixins.clickable();
+}
+
+.background {
+  height: 100vh;
+  width: 100vw;
+
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: blur(12px);
+  opacity: 0.15;
+}
+
+.cover {
+  cursor: pointer;
+}
+
+.spotlight {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  img {
+    width: 80vw;
+
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
+  }
+
+  .info {
+    --size: 1.2rem;
+    .track {
+      font-size: var(--size);
+      font-weight: 600;
+      display: block;
+    }
+
+    .album {
+      display: block;
+    }
+  }
+}
+
+@media (orientation: landscape) {
+  .content {
+    display: flex;
+    gap: 24px;
+  }
+
+  img {
+    $dim: 55vh;
+    max-height: $dim;
+    max-width: $dim;
+  }
 }
 
 @media (orientation: portrait) {
-  .spotlight {
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-
-    .background {
-      height: 100vh;
-      width: 100vw;
-
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-      filter: blur(12px);
-      opacity: 0.15;
-    }
-
-    img {
-      width: 80vw;
-
-      border: 1px solid rgba(255, 255, 255, 0.75);
-      box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
-    }
-
-    .info {
-      --size: 1.2rem;
-      .track {
-        font-size: var(--size);
-        font-weight: 600;
-        display: block;
-      }
-
-      .album {
-        display: block;
-      }
-    }
+  .closeIcon {
+    opacity: 1;
   }
 }
