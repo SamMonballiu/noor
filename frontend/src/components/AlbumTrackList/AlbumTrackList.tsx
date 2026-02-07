@@ -73,6 +73,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
             onPlay={() => onPlay(t)}
             onSelect={() => setSelectedTrackIndex(idx)}
             isSelected={selectedTrackIndex === idx}
+            showArtist={album.artists.length > 1}
           />
         ))}
       </section>
@@ -84,6 +85,7 @@ type TrackProps = Metadata & {
   onPlay: () => void;
   onSelect: () => void;
   isSelected: boolean;
+  showArtist: boolean;
 };
 
 const Track: FC<TrackProps> = ({
@@ -93,6 +95,7 @@ const Track: FC<TrackProps> = ({
   onPlay,
   onSelect,
   isSelected,
+  showArtist,
 }) => {
   return (
     <div
@@ -104,7 +107,9 @@ const Track: FC<TrackProps> = ({
       </div>
       <div>
         <div className={styles.title}>{title}</div>
-        <span className={styles.artists}>{artists?.join(",")}</span>
+        {showArtist ? (
+          <span className={styles.artists}>{artists?.join(",")}</span>
+        ) : null}
       </div>
     </div>
   );
