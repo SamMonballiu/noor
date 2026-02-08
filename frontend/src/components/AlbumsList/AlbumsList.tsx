@@ -39,7 +39,7 @@ export const AlbumsList: FC<Props> = ({ onSelect }) => {
 
   return (
     <div className={styles.container}>
-      {albumData.sort(byArtist).map((album) => (
+      {albumData.sort(byArtistThenByYear).map((album) => (
         <Album
           key={album.title}
           data={album}
@@ -65,6 +65,8 @@ const Album: FC<AlbumProps> = ({ data, onSelect }) => {
   );
 };
 
-const byArtist = (a: AlbumData, b: AlbumData) => {
-  return a.artists[0].localeCompare(b.artists[0]);
+const byArtistThenByYear = (a: AlbumData, b: AlbumData) => {
+  const artistCompare = a.artists[0].localeCompare(b.artists[0]);
+
+  return artistCompare === 0 ? (a.year ?? 0) - (b.year ?? 0) : artistCompare;
 };
