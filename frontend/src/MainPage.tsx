@@ -14,6 +14,7 @@ import { useAudioPlayer } from "./hooks/useAudioPlayer";
 import friendlyUrl from "friendly-url-extended";
 import { MdMusicNote, MdPerson } from "react-icons/md";
 import cx from "classnames";
+import type { Metadata } from "./models";
 
 type Mode = "content" | "spotlight";
 
@@ -25,10 +26,15 @@ export const MainPage: FC = () => {
   const { play, togglePlayPause, seek, isPlaying, progress, setVolume } =
     useAudioPlayer();
 
-  const handlePlay = (track: Parameters<typeof setTrackData>[0]) => {
+  const handlePlay = (track: Metadata, tracks: Metadata[]) => {
     setTrackData(track);
     setMode("spotlight");
-    play(track);
+    play(track, () => {
+      const next = tracks[track.number!];
+      if (next) {
+        handlePlay(next, tracks);
+      }
+    });
   };
 
   const handleToggleQueue = () => setShowQueue(!showQueue);

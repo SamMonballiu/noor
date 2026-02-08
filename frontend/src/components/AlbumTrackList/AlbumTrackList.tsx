@@ -10,7 +10,7 @@ import cx from "classnames";
 import { FaPlay } from "react-icons/fa";
 
 interface Props {
-  onPlay: (track: Metadata) => void;
+  onPlay: (track: Metadata, tracks: Metadata[]) => void;
 }
 
 export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
@@ -70,7 +70,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
           <Track
             key={t.number}
             {...t}
-            onPlay={() => onPlay(t)}
+            onPlay={() => onPlay(t, album.tracks)}
             onSelect={() => setSelectedTrackIndex(idx)}
             isSelected={selectedTrackIndex === idx}
             showArtist={album.artists.length > 1}

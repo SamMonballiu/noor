@@ -27,7 +27,7 @@ export const useAudioPlayer = () => {
     };
   }, [isPlaying]);
 
-  const play = useCallback((track: Metadata) => {
+  const play = useCallback((track: Metadata, onEnded?: () => void) => {
     // Clean up previous instance
     if (howlRef.current) {
       howlRef.current.unload();
@@ -48,6 +48,7 @@ export const useAudioPlayer = () => {
       onend: () => {
         setIsPlaying(false);
         setProgress(0);
+        onEnded?.();
       },
     });
 
