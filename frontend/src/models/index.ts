@@ -14,7 +14,7 @@ export type AlbumResponse = Record<string, Metadata[]>;
 
 export interface AlbumData {
   title: string;
-  artists: string[];
+  artists: Record<string, number>;
   year?: number;
   path: string;
 }

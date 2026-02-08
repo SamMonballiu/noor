@@ -8,6 +8,8 @@ import { ImagePreview } from "../ImagePreview/ImagePreview";
 import styles from "./AlbumTrackList.module.scss";
 import cx from "classnames";
 import { FaPlay } from "react-icons/fa";
+import { Artists } from "../Artists/Artists";
+import { getArtistsMap } from "../../models/util";
 
 interface Props {
   onPlay: (track: Metadata, tracks: Metadata[]) => void;
@@ -24,7 +26,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
   const album = useMemo<AlbumData & { tracks: Metadata[] }>(() => {
     const empty = {
       title: "",
-      artists: [],
+      artists: {},
       tracks: [],
       path: "",
     };
@@ -37,12 +39,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
         return {
           tracks: data[key],
           title: key,
-          artists: data[key]
-            .flatMap((t) => t.artists ?? [])
-            .reduce((acc, val) => {
-              if (!acc.includes(val)) acc.push(val);
-              return acc;
-            }, [] as string[]),
+          artists: getArtistsMap(data[key]),
           path: data[key][0].albumPath,
         };
       }
@@ -59,7 +56,9 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
         )}
         <section className={styles.details}>
           <h1>{album.title}</h1>
-          <h4>{album.artists.join(", ")}</h4>
+          <h4>
+            <Artists {...album} onClick={() => alert("todo")} />
+          </h4>
           <h5>
             {album.tracks[0]?.year} - {album.tracks.length} songs
           </h5>
@@ -73,7 +72,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
             onPlay={() => onPlay(t, album.tracks)}
             onSelect={() => setSelectedTrackIndex(idx)}
             isSelected={selectedTrackIndex === idx}
-            showArtist={album.artists.length > 1}
+            showArtist={Object.keys(album.artists).length > 1}
           />
         ))}
       </section>

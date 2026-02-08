@@ -5,6 +5,8 @@ import { useAlbumsQuery } from "../../query";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
 import type { AlbumData } from "../../models";
+import { getArtistsMap, getMainArtist } from "../../models/util";
+import { Artists } from "../Artists/Artists";
 
 interface Props {
   onSelect: (albumName: string) => void;
@@ -19,16 +21,9 @@ export const AlbumsList: FC<Props> = ({ onSelect }) => {
 
     let result: AlbumData[] = [];
     for (const key of Object.keys(data)) {
-      const artists = data[key].reduce((acc, val) => {
-        for (const artist of val.artists ?? []) {
-          if (!acc.includes(artist)) acc.push(artist);
-        }
-        return acc;
-      }, [] as string[]);
-
       result.push({
         title: key,
-        artists,
+        artists: getArtistsMap(data[key]),
         year: data[key][0].year,
         path: data[key][0].path.split("/").slice(0, -1).join("/"),
       });
@@ -59,14 +54,18 @@ const Album: FC<AlbumProps> = ({ data, onSelect }) => {
     <div className={styles.album} onClick={onSelect}>
       <ImagePreview path={data.path} className={styles.cover} />
       <p className={styles.title}>{data.title}</p>
-      <p>{data.artists.join(", ")}</p>
+      <p>
+        <Artists {...data} show="onlymain" />
+      </p>
       <p>{data.year}</p>
     </div>
   );
 };
 
 const byArtistThenByYear = (a: AlbumData, b: AlbumData) => {
-  const artistCompare = a.artists[0].localeCompare(b.artists[0]);
+  const artistCompare = getMainArtist(a.artists).localeCompare(
+    getMainArtist(b.artists),
+  );
 
   return artistCompare === 0 ? (a.year ?? 0) - (b.year ?? 0) : artistCompare;
 };
