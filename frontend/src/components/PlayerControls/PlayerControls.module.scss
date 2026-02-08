@@ -1,6 +1,7 @@
-@import "../mixins";
+@use "../mixins.scss";
+
 .controls {
-  @include flex();
+  @include mixins.flex();
   font-size: 24px;
   gap: 36px;
 

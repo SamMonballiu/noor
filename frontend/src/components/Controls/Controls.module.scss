@@ -1,4 +1,4 @@
-@import "../mixins";
+@use "../mixins.scss";
 
 .bottom {
   background: rgb(22, 20, 22);
@@ -22,11 +22,11 @@
     justify-content: space-between;
 
     .options {
-      @include flex();
+      @include mixins.flex();
 
       font-size: 24px;
       svg {
-        @include btn();
+        @include mixins.btn();
       }
     }
   }

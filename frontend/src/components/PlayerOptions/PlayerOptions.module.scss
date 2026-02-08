@@ -1,11 +1,11 @@
-@import "../mixins";
+@use "../mixins.scss";
 
 .options {
-  @include flex();
+  @include mixins.flex();
 
   font-size: 24px;
   svg {
-    @include btn();
+    @include mixins.btn();
   }
 }
 
