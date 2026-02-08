@@ -66,7 +66,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
         </section>
       </section>
       <section className={styles.tracks}>
-        {album.tracks.map((t, idx) => (
+        {album.tracks.sort(byNumber).map((t, idx) => (
           <Track
             key={t.number}
             {...t}
@@ -114,3 +114,6 @@ const Track: FC<TrackProps> = ({
     </div>
   );
 };
+
+const byNumber = (a: Metadata, b: Metadata) =>
+  (a.number ?? 0) - (b.number ?? 0);
