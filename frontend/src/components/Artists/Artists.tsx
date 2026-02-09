@@ -17,8 +17,16 @@ export const Artists: FC<Props> = ({
 }) => {
   const mainArtist = getMainArtist(artists);
 
-  const allArtists = getArtists(artists);
+  if (show === "onlymain") {
+    return (
+      <Artist
+        name={mainArtist}
+        onClick={onClick ? () => onClick(mainArtist) : undefined}
+      />
+    );
+  }
 
+  const allArtists = getArtists(artists);
   const collection = show === "all" ? allArtists : [mainArtist];
 
   return (
@@ -63,7 +71,7 @@ const getArtists = (artists: Record<string, number>) => {
 const byOccurrences = (
   a: string,
   b: string,
-  artists: Record<string, number>,
+  artists: Record<string, number>
 ) => {
   return artists[b] - artists[a];
 };
