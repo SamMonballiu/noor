@@ -69,7 +69,6 @@ const Album: FC<AlbumProps> = ({ data, onSelect }) => {
         className={styles.cover}
         onClick={onSelect}
       />
-      {/* <div className={styles.cover}>&nbsp;</div> */}
       <p className={styles.title}>{data.title}</p>
       <p>
         <Artists {...data} show="onlymain" />

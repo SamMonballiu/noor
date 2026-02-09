@@ -1,66 +1,18 @@
-$padding: 0px;
-$gap: 16px;
+@media (orientation: portrait) {
+  .container {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
 
 .container {
-  padding: $padding;
-  display: flex;
-  gap: $gap;
-  flex-wrap: wrap;
-  justify-content: center;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 12px;
 
-  background: rgb(16, 16, 18);
-  background: radial-gradient(
-    circle,
-    rgba(44, 40, 44, 1) 0%,
-    rgba(31, 31, 33, 1) 100%
-  );
-}
-
-// albums per row
-$apr: 5;
-$dim: calc(((100vw - ($padding * 2) - ($gap * ($apr - 1))) / $apr) - 1vw);
-
-@media (orientation: portrait) {
-  $padding: 12px;
-  $gap: 24px;
-  $dimMobile: calc(50vw - $gap - ($padding * 2));
-
-  .container {
-    padding: $padding !important;
-    gap: $gap !important;
-  }
-
-  .album {
-    width: $dimMobile !important;
-    p {
-      width: calc($dimMobile - 1vw) !important;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      margin: 0;
-    }
-  }
-
-  .cover {
-    height: $dimMobile !important;
-    width: $dimMobile !important;
-    img {
-      width: $dimMobile !important;
-      height: $dimMobile !important;
-      object-fit: cover;
-    }
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
-    overflow: hidden;
-  }
-}
-
-.album {
-  width: $dim;
-  user-select: none;
   p {
-    width: $dim;
     text-overflow: ellipsis;
+    width: 100%;
     overflow: hidden;
     white-space: nowrap;
     margin: 0;
@@ -70,17 +22,20 @@ $dim: calc(((100vw - ($padding * 2) - ($gap * ($apr - 1))) / $apr) - 1vw);
     font-weight: 600;
   }
 
-  .cover {
-    height: $dim;
-    width: $dim;
-    //border: 1px solid red !important;
-    img {
-      width: $dim;
-      height: $dim;
-      object-fit: cover;
-    }
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
+  .album {
+    width: 100%;
     overflow: hidden;
+
+    .cover {
+      aspect-ratio: 1 / 1;
+      img {
+        width: 100%;
+        object-fit: cover;
+        //aspect-ratio: 1 / 1;
+      }
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+    }
   }
 }
