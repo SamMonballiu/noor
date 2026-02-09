@@ -7,14 +7,14 @@ import friendlyUrl from "friendly-url-extended";
 import type { AlbumData } from "../../models";
 import { getArtistsMap, getMainArtist } from "../../models/util";
 import { Artists } from "../Artists/Artists";
-import { useRoutes } from "../../hooks/useRoutes";
+import { useRouting } from "../../hooks/useRouting";
 
 interface Props {
   onSelect: (artistName: string, albumName: string) => void;
 }
 export const AlbumsList: FC<Props> = ({ onSelect }) => {
   const { data, isLoading } = useAlbumsQuery();
-  const { route } = useRoutes();
+  const { route } = useRouting();
 
   const albumData = useMemo<AlbumData[]>(() => {
     if (isLoading || !data) {

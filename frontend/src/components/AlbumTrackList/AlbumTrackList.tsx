@@ -1,5 +1,4 @@
 import React, { useMemo, useState, type FC } from "react";
-import { useRoutes } from "../../hooks/useRoutes";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
 import { useAlbumsQuery } from "../../query";
@@ -10,19 +9,18 @@ import cx from "classnames";
 import { FaPlay } from "react-icons/fa";
 import { Artists } from "../Artists/Artists";
 import { getArtistsMap } from "../../models/util";
-import { useNavigation } from "../../hooks/useNavigation";
+import { useRouting } from "../../hooks/useRouting";
 
 interface Props {
   onPlay: (track: Metadata, tracks: Metadata[]) => void;
 }
 
 export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
-  const { route } = useRoutes();
-  const { navigate } = useNavigation();
+  const { route, navigate } = useRouting();
   const { data, isLoading } = useAlbumsQuery();
 
   const [selectedTrackIndex, setSelectedTrackIndex] = useState<number | null>(
-    null,
+    null
   );
 
   const album = useMemo<AlbumData & { tracks: Metadata[] }>(() => {
@@ -98,7 +96,7 @@ const Track: FC<TrackProps> = ({
   isSelected,
   showArtist,
 }) => {
-  const { navigate } = useNavigation();
+  const { navigate } = useRouting();
   return (
     <div
       className={cx(styles.track, { [styles.selected]: isSelected })}

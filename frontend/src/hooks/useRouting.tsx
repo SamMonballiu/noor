@@ -1,16 +1,20 @@
-import { useLocation } from "wouter";
-import { routes, type RouteParams } from "../routing";
+import { useLocation, useRoute } from "wouter";
+import {
+  routes,
+  type ArtistAlbumRouteParams,
+  type RouteParams,
+} from "../routing";
 // @ts-ignore;
 import friendlyUrl from "friendly-url-extended";
 
 const url = friendlyUrl;
 
-export function useNavigation() {
+export const useRouting = () => {
   const [, setLocation] = useLocation();
   const getRoute = <T extends RouteParams>(
     route: string,
     params?: T,
-    options?: { fullyQualified: boolean },
+    options?: { fullyQualified: boolean }
   ) => {
     if (params !== undefined) {
       route = Object.entries(params).reduce((acc, [key, value]) => {
@@ -31,7 +35,7 @@ export function useNavigation() {
   const navigateTo = <T extends RouteParams>(
     route: string,
     params?: T,
-    querystring: string = "",
+    querystring: string = ""
   ) => {
     if (params !== undefined) {
       route = Object.entries(params).reduce((acc, [key, value]) => {
@@ -49,6 +53,17 @@ export function useNavigation() {
     navigateTo(routes.artist, { artist: url(artist), album: url(album) });
   };
 
+  const [isAlbumsRoute] = useRoute<RouteParams>(routes.allAlbums);
+
+  const [isArtistRoute, artistRouteParams] = useRoute<ArtistAlbumRouteParams>(
+    routes.artist
+  );
+
+  const params = {
+    album: isArtistRoute ? artistRouteParams.album : undefined,
+    artist: isArtistRoute ? artistRouteParams.artist : undefined,
+  };
+
   return {
     navigate: {
       to: navigateTo,
@@ -56,5 +71,13 @@ export function useNavigation() {
       toArtist: navigateToArtist,
       getRoute,
     },
+    route: {
+      is: {
+        allAlbums: isAlbumsRoute,
+        artist: isArtistRoute,
+        album: isArtistRoute && artistRouteParams.album !== undefined,
+      },
+      params,
+    },
   };
-}
+};

@@ -6,15 +6,14 @@ import { useTrack } from "./contexts/TrackContext";
 import { AlbumsList } from "./components/AlbumsList/AlbumsList";
 import { Redirect, Route, Switch } from "wouter";
 import { routes } from "./routing";
-import { useRoutes } from "./hooks/useRoutes";
 import { AlbumTrackList } from "./components/AlbumTrackList/AlbumTrackList";
-import { useNavigation } from "./hooks/useNavigation";
 import { useAudioPlayer } from "./hooks/useAudioPlayer";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
 import { MdMusicNote, MdPerson } from "react-icons/md";
 import cx from "classnames";
 import type { Metadata } from "./models";
+import { useRouting } from "./hooks/useRouting";
 
 type Mode = "content" | "spotlight";
 
@@ -39,8 +38,7 @@ export const MainPage: FC = () => {
 
   const handleToggleQueue = () => setShowQueue(!showQueue);
 
-  const { route } = useRoutes();
-  const { navigate } = useNavigation();
+  const { route, navigate } = useRouting();
 
   return (
     <div className={styles.container}>
