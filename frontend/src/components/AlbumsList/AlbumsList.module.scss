@@ -1,20 +1,12 @@
-$padding: 24px;
-$gap: 48px;
-$albums-per-row: 7;
-
-@media (max-width: 1000px) {
-  $albums-per-row: 3;
-}
-
-$dim: calc(
-  (100vw - ($padding * 2) - ($gap * ($albums-per-row - 1))) / $albums-per-row
-);
+$padding: 0px;
+$gap: 16px;
 
 .container {
   padding: $padding;
   display: flex;
   gap: $gap;
   flex-wrap: wrap;
+  justify-content: center;
 
   background: rgb(16, 16, 18);
   background: radial-gradient(
@@ -24,7 +16,47 @@ $dim: calc(
   );
 }
 
+// albums per row
+$apr: 5;
+$dim: calc(((100vw - ($padding * 2) - ($gap * ($apr - 1))) / $apr) - 1vw);
+
+@media (orientation: portrait) {
+  $padding: 12px;
+  $gap: 24px;
+  $dimMobile: calc(50vw - $gap - ($padding * 2));
+
+  .container {
+    padding: $padding !important;
+    gap: $gap !important;
+  }
+
+  .album {
+    width: $dimMobile !important;
+    p {
+      width: calc($dimMobile - 1vw) !important;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      margin: 0;
+    }
+  }
+
+  .cover {
+    height: $dimMobile !important;
+    width: $dimMobile !important;
+    img {
+      width: $dimMobile !important;
+      height: $dimMobile !important;
+      object-fit: cover;
+    }
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+  }
+}
+
 .album {
+  width: $dim;
   user-select: none;
   p {
     width: $dim;
@@ -39,43 +71,16 @@ $dim: calc(
   }
 
   .cover {
-    width: $dim;
     height: $dim;
+    width: $dim;
+    //border: 1px solid red !important;
     img {
       width: $dim;
       height: $dim;
+      object-fit: cover;
     }
-    object-fit: cover;
     border: 1px solid rgba(255, 255, 255, 0.75);
     box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
     overflow: hidden;
-  }
-}
-
-@media (max-width: 1000px) {
-  // $albums-per-row: 3;
-  // $dim: calc(
-  //   (100vw - ($padding * 2) - ($gap * ($albums-per-row - 1))) / $albums-per-row
-  // );
-
-  $dim: 33vw;
-
-  .album {
-    p {
-      width: $dim !important;
-    }
-  }
-
-  .cover {
-    width: $dim !important;
-    height: $dim !important;
-    img {
-      width: $dim !important;
-      height: $dim !important;
-    }
-    object-fit: cover;
-    // border: 1px solid rgba(255, 255, 255, 0.75);
-    // box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
-    // overflow: hidden;
   }
 }
