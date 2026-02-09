@@ -6,7 +6,7 @@
   gap: 36px;
 
   svg {
-    @include btn();
+    @include mixins.btn();
   }
 
   .mainBtn {

@@ -46,10 +46,10 @@ export const MainPage: FC = () => {
     <div className={styles.container}>
       <section className={styles.top}>
         <div
-          className={cx({ [styles.active]: route.is.album })}
+          className={cx({ [styles.active]: route.is.allAlbums })}
           onClick={() => {
             setMode("content");
-            navigate.to(routes.albums, { album: "" });
+            navigate.to(routes.allAlbums);
           }}
         >
           <MdMusicNote />
@@ -66,21 +66,28 @@ export const MainPage: FC = () => {
           })}
         >
           <Switch>
-            <Route path={routes.albums}>
+            <Route path={routes.allAlbums}>
+              <AlbumsList
+                onSelect={(mainArtist, albumName) =>
+                  navigate.toAlbum(mainArtist, albumName)
+                }
+              />
+            </Route>
+            <Route path="/">
+              <Redirect to="/albums" />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={routes.artist}>
               {route.params.album ? (
                 <AlbumTrackList onPlay={handlePlay} />
               ) : (
                 <AlbumsList
-                  onSelect={(albumName) =>
-                    navigate.to(routes.albums, {
-                      album: friendlyUrl(albumName),
-                    })
+                  onSelect={(mainArtist, albumName) =>
+                    navigate.toAlbum(mainArtist, albumName)
                   }
                 />
               )}
-            </Route>
-            <Route path="/">
-              <Redirect to="/albums" />
             </Route>
           </Switch>
         </section>
@@ -91,9 +98,13 @@ export const MainPage: FC = () => {
             onClose={() => setMode("content")}
             onAlbumClick={() => {
               setMode("content");
-              navigate.to(routes.albums, {
+              navigate.to(routes.allAlbums, {
                 album: friendlyUrl(track.album),
               });
+            }}
+            onArtistClick={(artist) => {
+              setMode("content");
+              navigate.toArtist(artist);
             }}
           />
         ) : null}

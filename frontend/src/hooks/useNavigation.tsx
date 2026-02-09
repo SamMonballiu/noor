@@ -1,5 +1,9 @@
 import { useLocation } from "wouter";
-import type { RouteParams } from "../routing";
+import { routes, type RouteParams } from "../routing";
+// @ts-ignore;
+import friendlyUrl from "friendly-url-extended";
+
+const url = friendlyUrl;
 
 export function useNavigation() {
   const [, setLocation] = useLocation();
@@ -38,9 +42,18 @@ export function useNavigation() {
     setLocation(getRoute(route, params) + querystring);
   };
 
+  const navigateToArtist = (artist: string) => {
+    navigateTo(routes.artist, { artist: url(artist), album: "" });
+  };
+  const navigateToAlbum = (artist: string, album: string) => {
+    navigateTo(routes.artist, { artist: url(artist), album: url(album) });
+  };
+
   return {
     navigate: {
       to: navigateTo,
+      toAlbum: navigateToAlbum,
+      toArtist: navigateToArtist,
       getRoute,
     },
   };

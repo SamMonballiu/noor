@@ -7,12 +7,14 @@ import friendlyUrl from "friendly-url-extended";
 import type { AlbumData } from "../../models";
 import { getArtistsMap, getMainArtist } from "../../models/util";
 import { Artists } from "../Artists/Artists";
+import { useRoutes } from "../../hooks/useRoutes";
 
 interface Props {
-  onSelect: (albumName: string) => void;
+  onSelect: (artistName: string, albumName: string) => void;
 }
 export const AlbumsList: FC<Props> = ({ onSelect }) => {
   const { data, isLoading } = useAlbumsQuery();
+  const { route } = useRoutes();
 
   const albumData = useMemo<AlbumData[]>(() => {
     if (isLoading || !data) {
@@ -21,12 +23,22 @@ export const AlbumsList: FC<Props> = ({ onSelect }) => {
 
     let result: AlbumData[] = [];
     for (const key of Object.keys(data)) {
-      result.push({
-        title: key,
-        artists: getArtistsMap(data[key]),
-        year: data[key][0].year,
-        path: data[key][0].path.split("/").slice(0, -1).join("/"),
-      });
+      const artists = getArtistsMap(data[key]);
+
+      if (
+        (route.is.artist &&
+          Object.keys(artists).some(
+            (x) => friendlyUrl(x) === route.params.artist
+          )) ||
+        route.is.allAlbums
+      ) {
+        result.push({
+          title: key,
+          artists: artists,
+          year: data[key][0].year,
+          path: data[key][0].path.split("/").slice(0, -1).join("/"),
+        });
+      }
     }
 
     return result;
@@ -38,7 +50,7 @@ export const AlbumsList: FC<Props> = ({ onSelect }) => {
         <Album
           key={album.title}
           data={album}
-          onSelect={() => onSelect(album.title)}
+          onSelect={() => onSelect(getMainArtist(album.artists), album.title)}
         />
       ))}
     </div>
@@ -51,8 +63,13 @@ interface AlbumProps {
 }
 const Album: FC<AlbumProps> = ({ data, onSelect }) => {
   return (
-    <div className={styles.album} onClick={onSelect}>
-      <ImagePreview path={data.path} className={styles.cover} />
+    <div className={styles.album}>
+      <ImagePreview
+        path={data.path}
+        className={styles.cover}
+        onClick={onSelect}
+      />
+      {/* <div className={styles.cover}>&nbsp;</div> */}
       <p className={styles.title}>{data.title}</p>
       <p>
         <Artists {...data} show="onlymain" />
@@ -64,7 +81,7 @@ const Album: FC<AlbumProps> = ({ data, onSelect }) => {
 
 const byArtistThenByYear = (a: AlbumData, b: AlbumData) => {
   const artistCompare = getMainArtist(a.artists).localeCompare(
-    getMainArtist(b.artists),
+    getMainArtist(b.artists)
   );
 
   return artistCompare === 0 ? (a.year ?? 0) - (b.year ?? 0) : artistCompare;

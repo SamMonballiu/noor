@@ -1,19 +1,28 @@
 import { useRoute } from "wouter";
-import { routes, type AlbumRouteParams } from "../routing";
+import {
+  routes,
+  type ArtistAlbumRouteParams,
+  type RouteParams,
+} from "../routing";
 
 export const useRoutes = () => {
-  const [isAlbumRoute, albumRouteParams] = useRoute<AlbumRouteParams>(
-    routes.albums,
+  const [isAlbumsRoute] = useRoute<RouteParams>(routes.allAlbums);
+
+  const [isArtistRoute, artistRouteParams] = useRoute<ArtistAlbumRouteParams>(
+    routes.artist,
   );
 
   const params = {
-    album: isAlbumRoute ? albumRouteParams?.album : undefined,
+    album: isArtistRoute ? artistRouteParams.album : undefined,
+    artist: isArtistRoute ? artistRouteParams.artist : undefined,
   };
 
   return {
     route: {
       is: {
-        album: isAlbumRoute,
+        allAlbums: isAlbumsRoute,
+        artist: isArtistRoute,
+        album: isArtistRoute && artistRouteParams.album !== undefined,
       },
       params,
     },

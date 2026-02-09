@@ -12,9 +12,10 @@ interface Props {
   quality?: number;
   square?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 
-export const ImagePreview: FC<Props> = ({ path, className }) => {
+export const ImagePreview: FC<Props> = ({ path, className, onClick }) => {
   const { ref, inView } = useInView();
   const queryClient = useQueryClient();
   const [hasBeenInView, setHasBeenInView] = useState(false);
@@ -33,11 +34,15 @@ export const ImagePreview: FC<Props> = ({ path, className }) => {
 
   const { data: imageData, isFetching: isFetchingImage } = useAlbumCoverQuery(
     path,
-    hasBeenInView,
+    hasBeenInView
   );
 
   return (
-    <div className={cx(styles.container, className)} ref={ref}>
+    <div
+      className={cx(styles.container, className)}
+      ref={ref}
+      onClick={onClick}
+    >
       {isFetchingImage ? (
         <Loading className={styles.preview} />
       ) : (

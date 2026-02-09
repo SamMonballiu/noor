@@ -1,4 +1,4 @@
-import { useMemo, useState, type FC } from "react";
+import React, { useMemo, useState, type FC } from "react";
 import { useRoutes } from "../../hooks/useRoutes";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
@@ -10,6 +10,7 @@ import cx from "classnames";
 import { FaPlay } from "react-icons/fa";
 import { Artists } from "../Artists/Artists";
 import { getArtistsMap } from "../../models/util";
+import { useNavigation } from "../../hooks/useNavigation";
 
 interface Props {
   onPlay: (track: Metadata, tracks: Metadata[]) => void;
@@ -17,6 +18,7 @@ interface Props {
 
 export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
   const { route } = useRoutes();
+  const { navigate } = useNavigation();
   const { data, isLoading } = useAlbumsQuery();
 
   const [selectedTrackIndex, setSelectedTrackIndex] = useState<number | null>(
@@ -57,7 +59,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
         <section className={styles.details}>
           <h1>{album.title}</h1>
           <h4>
-            <Artists {...album} onClick={() => alert("todo")} />
+            <Artists {...album} onClick={navigate.toArtist} />
           </h4>
           <h5>
             {album.tracks[0]?.year} - {album.tracks.length} songs
@@ -96,6 +98,7 @@ const Track: FC<TrackProps> = ({
   isSelected,
   showArtist,
 }) => {
+  const { navigate } = useNavigation();
   return (
     <div
       className={cx(styles.track, { [styles.selected]: isSelected })}
@@ -106,9 +109,21 @@ const Track: FC<TrackProps> = ({
       </div>
       <div>
         <div className={styles.title}>{title}</div>
-        {showArtist ? (
-          <span className={styles.artists}>{artists?.join(",")}</span>
-        ) : null}
+        {showArtist
+          ? artists?.map((x, idx, arr) => (
+              <React.Fragment key={idx}>
+                <span
+                  className={styles.artists}
+                  onClick={() => navigate.toArtist(x)}
+                >
+                  {x}
+                </span>
+                {idx < arr.length - 1 && (
+                  <span className={styles.artists}>, </span>
+                )}
+              </React.Fragment>
+            ))
+          : null}
       </div>
     </div>
   );

@@ -21,3 +21,9 @@
     opacity: 1;
   }
 }
+
+@mixin hover-link() {
+  &:hover {
+    text-decoration: underline;
+  }
+}
