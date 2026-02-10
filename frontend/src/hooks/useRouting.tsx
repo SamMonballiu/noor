@@ -10,11 +10,11 @@ import friendlyUrl from "friendly-url-extended";
 const url = friendlyUrl;
 
 export const useRouting = () => {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const getRoute = <T extends RouteParams>(
     route: string,
     params?: T,
-    options?: { fullyQualified: boolean }
+    options?: { fullyQualified: boolean },
   ) => {
     if (params !== undefined) {
       route = Object.entries(params).reduce((acc, [key, value]) => {
@@ -35,7 +35,7 @@ export const useRouting = () => {
   const navigateTo = <T extends RouteParams>(
     route: string,
     params?: T,
-    querystring: string = ""
+    querystring: string = "",
   ) => {
     if (params !== undefined) {
       route = Object.entries(params).reduce((acc, [key, value]) => {
@@ -56,7 +56,7 @@ export const useRouting = () => {
   const [isAlbumsRoute] = useRoute<RouteParams>(routes.allAlbums);
 
   const [isArtistRoute, artistRouteParams] = useRoute<ArtistAlbumRouteParams>(
-    routes.artist
+    routes.artist,
   );
 
   const params = {
@@ -77,6 +77,7 @@ export const useRouting = () => {
         artist: isArtistRoute,
         album: isArtistRoute && artistRouteParams.album !== undefined,
       },
+      path: location,
       params,
     },
   };

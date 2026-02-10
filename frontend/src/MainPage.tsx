@@ -5,7 +5,7 @@ import { Spotlight } from "./components/Spotlight/Spotlight";
 import { useTrack } from "./contexts/TrackContext";
 import { AlbumsList } from "./components/AlbumsList/AlbumsList";
 import { Redirect, Route, Switch } from "wouter";
-import { routes } from "./routing";
+import { routes, isValidArtistRoute } from "./routing";
 import { AlbumTrackList } from "./components/AlbumTrackList/AlbumTrackList";
 import { useAudioPlayer } from "./hooks/useAudioPlayer";
 //@ts-ignore
@@ -76,17 +76,19 @@ export const MainPage: FC = () => {
             </Route>
           </Switch>
           <Switch>
-            <Route path={routes.artist}>
-              {route.params.album ? (
-                <AlbumTrackList onPlay={handlePlay} />
-              ) : (
-                <AlbumsList
-                  onSelect={(mainArtist, albumName) =>
-                    navigate.toAlbum(mainArtist, albumName)
-                  }
-                />
-              )}
-            </Route>
+            {isValidArtistRoute(route.path) ? (
+              <Route path={routes.artist}>
+                {route.params.album ? (
+                  <AlbumTrackList onPlay={handlePlay} />
+                ) : (
+                  <AlbumsList
+                    onSelect={(mainArtist, albumName) =>
+                      navigate.toAlbum(mainArtist, albumName)
+                    }
+                  />
+                )}
+              </Route>
+            ) : null}
           </Switch>
         </section>
 
