@@ -80,8 +80,7 @@ export const useAudioPlayer = () => {
 
   const setVolume = useCallback(
     (volume: number) => {
-      if (!howlRef.current) return;
-      howlRef.current.volume(volume); // 0.0 to 1.0
+      howlRef.current?.volume(volume); // 0.0 to 1.0
       setTrackVolume(volume);
     },
     [setTrackVolume],
