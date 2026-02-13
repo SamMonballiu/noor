@@ -8,7 +8,12 @@ export const useAudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const { volume: trackVolume, setVolume: setTrackVolume } = useTrack();
+
+  const {
+    volume: trackVolume,
+    setVolume: setTrackVolume,
+    isMuted: isTrackMuted,
+  } = useTrack();
 
   // Update progress periodically while playing
   useEffect(() => {
@@ -28,6 +33,10 @@ export const useAudioPlayer = () => {
       if (interval) clearInterval(interval);
     };
   }, [isPlaying]);
+
+  useEffect(() => {
+    howlRef.current?.mute(isTrackMuted);
+  }, [isTrackMuted]);
 
   const play = useCallback(
     (track: Metadata, onEnded?: () => void) => {
