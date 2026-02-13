@@ -1,12 +1,14 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import { Howl } from "howler";
 import type { Metadata } from "../models";
+import { useTrack } from "../contexts/TrackContext";
 
 export const useAudioPlayer = () => {
   const howlRef = useRef<Howl | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const { volume: trackVolume, setVolume: setTrackVolume } = useTrack();
 
   // Update progress periodically while playing
   useEffect(() => {
@@ -27,33 +29,39 @@ export const useAudioPlayer = () => {
     };
   }, [isPlaying]);
 
-  const play = useCallback((track: Metadata, onEnded?: () => void) => {
-    // Clean up previous instance
-    if (howlRef.current) {
-      howlRef.current.unload();
-    }
+  const play = useCallback(
+    (track: Metadata, onEnded?: () => void) => {
+      // Clean up previous instance
+      if (howlRef.current) {
+        howlRef.current.unload();
+      }
 
-    const url = `${import.meta.env.VITE_DEVPREFIX}/api/audio?path=${encodeURIComponent(track.path)}`;
+      const url = `${
+        import.meta.env.VITE_DEVPREFIX
+      }/api/audio?path=${encodeURIComponent(track.path)}`;
 
-    howlRef.current = new Howl({
-      src: [url],
-      html5: true, // Important: enables streaming & seeking for large files
-      format: [track.path.endsWith(".ogg") ? "ogg" : "mp3"],
-      onload: () => {
-        setDuration(howlRef.current?.duration() ?? 0);
-      },
-      onplay: () => setIsPlaying(true),
-      onpause: () => setIsPlaying(false),
-      onstop: () => setIsPlaying(false),
-      onend: () => {
-        setIsPlaying(false);
-        setProgress(0);
-        onEnded?.();
-      },
-    });
+      howlRef.current = new Howl({
+        src: [url],
+        html5: true, // Important: enables streaming & seeking for large files
+        format: [track.path.endsWith(".ogg") ? "ogg" : "mp3"],
+        onload: () => {
+          setDuration(howlRef.current?.duration() ?? 0);
+        },
+        onplay: () => setIsPlaying(true),
+        onpause: () => setIsPlaying(false),
+        onstop: () => setIsPlaying(false),
+        onend: () => {
+          setIsPlaying(false);
+          setProgress(0);
+          onEnded?.();
+        },
+      });
 
-    howlRef.current.play();
-  }, []);
+      howlRef.current.volume(trackVolume);
+      howlRef.current.play();
+    },
+    [trackVolume],
+  );
 
   const togglePlayPause = useCallback(() => {
     if (!howlRef.current) return;
@@ -70,10 +78,14 @@ export const useAudioPlayer = () => {
     howlRef.current.seek(position * howlRef.current.duration());
   }, []);
 
-  const setVolume = useCallback((volume: number) => {
-    if (!howlRef.current) return;
-    howlRef.current.volume(volume); // 0.0 to 1.0
-  }, []);
+  const setVolume = useCallback(
+    (volume: number) => {
+      if (!howlRef.current) return;
+      howlRef.current.volume(volume); // 0.0 to 1.0
+      setTrackVolume(volume);
+    },
+    [setTrackVolume],
+  );
 
   // Cleanup on unmount
   useEffect(() => {
