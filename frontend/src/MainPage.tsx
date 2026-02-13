@@ -1,6 +1,5 @@
 import { useState, type FC } from "react";
 import styles from "./MainPage.module.scss";
-import { Controls } from "./components/Controls/Controls";
 import { Spotlight } from "./components/Spotlight/Spotlight";
 import { useTrack } from "./contexts/TrackContext";
 import { AlbumsList } from "./components/AlbumsList/AlbumsList";
@@ -14,6 +13,10 @@ import { MdMusicNote, MdPerson } from "react-icons/md";
 import cx from "classnames";
 import type { Metadata } from "./models";
 import { useRouting } from "./hooks/useRouting";
+import { NowPlaying } from "./components/NowPlaying/NowPlaying";
+import { PlayerControls } from "./components/PlayerControls/PlayerControls";
+import { PlayerOptions } from "./components/PlayerOptions/PlayerOptions";
+import { ProgressBar } from "./components/ProgressBar/ProgressBar";
 
 type Mode = "content" | "spotlight";
 
@@ -111,17 +114,25 @@ export const MainPage: FC = () => {
         {showQueue && <section className={styles.queue}>queue</section>}
       </section>
 
-      <Controls
-        isPlaying={isPlaying}
-        progress={progress}
-        onPlayPause={togglePlayPause}
-        onPrevious={() => console.log("Previous")}
-        onNext={() => console.log("Next")}
-        onSeek={seek}
-        onToggleQueue={handleToggleQueue}
-        onClickPlaying={() => setMode("spotlight")}
-        onVolumeChanged={setVolume}
-      />
+      <section className={styles.bottom}>
+        <ProgressBar value={progress} onSeek={seek} />
+
+        <section className={styles.controls}>
+          <NowPlaying onClick={() => setMode("spotlight")} />
+
+          <PlayerControls
+            isPlaying={isPlaying}
+            onPlayPause={togglePlayPause}
+            onPrevious={() => console.log("Previous")}
+            onNext={() => console.log("Next")}
+          />
+
+          <PlayerOptions
+            onToggleQueue={handleToggleQueue}
+            onVolumeChanged={setVolume}
+          />
+        </section>
+      </section>
     </div>
   );
 };
