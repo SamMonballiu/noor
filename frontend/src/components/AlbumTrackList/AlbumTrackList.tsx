@@ -10,6 +10,7 @@ import { FaPlay } from "react-icons/fa";
 import { Artists } from "../Artists/Artists";
 import { getArtistsMap } from "../../models/util";
 import { useRouting } from "../../hooks/useRouting";
+import { Track } from "../Track/Track";
 
 interface Props {
   onPlay: (track: Metadata, tracks: Metadata[]) => void;
@@ -20,7 +21,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
   const { data, isLoading } = useAlbumsQuery();
 
   const [selectedTrackIndex, setSelectedTrackIndex] = useState<number | null>(
-    null
+    null,
   );
 
   const album = useMemo<AlbumData & { tracks: Metadata[] }>(() => {
@@ -69,60 +70,15 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
           <Track
             key={t.number}
             {...t}
-            onPlay={() => onPlay(t, album.tracks)}
-            onSelect={() => setSelectedTrackIndex(idx)}
+            className={selectedTrackIndex === idx ? styles.selected : undefined}
+            onDoubleClick={() => onPlay(t, album.tracks)}
+            onClick={() => setSelectedTrackIndex(idx)}
             isSelected={selectedTrackIndex === idx}
             showArtist={Object.keys(album.artists).length > 1}
+            showNumber
           />
         ))}
       </section>
-    </div>
-  );
-};
-
-type TrackProps = Metadata & {
-  onPlay: () => void;
-  onSelect: () => void;
-  isSelected: boolean;
-  showArtist: boolean;
-};
-
-const Track: FC<TrackProps> = ({
-  number,
-  title,
-  artists,
-  onPlay,
-  onSelect,
-  isSelected,
-  showArtist,
-}) => {
-  const { navigate } = useRouting();
-  return (
-    <div
-      className={cx(styles.track, { [styles.selected]: isSelected })}
-      onClick={isSelected ? onPlay : onSelect}
-    >
-      <div className={styles.number}>
-        {isSelected ? <FaPlay /> : <span>{number}</span>}
-      </div>
-      <div>
-        <div className={styles.title}>{title}</div>
-        {showArtist
-          ? artists?.map((x, idx, arr) => (
-              <React.Fragment key={idx}>
-                <span
-                  className={styles.artists}
-                  onClick={() => navigate.toArtist(x)}
-                >
-                  {x}
-                </span>
-                {idx < arr.length - 1 && (
-                  <span className={styles.artists}>, </span>
-                )}
-              </React.Fragment>
-            ))
-          : null}
-      </div>
     </div>
   );
 };

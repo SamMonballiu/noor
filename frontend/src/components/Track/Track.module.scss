@@ -1,0 +1,49 @@
+@use "../mixins.scss";
+
+.track {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 4px 12px;
+  user-select: none;
+  transition: background 200ms;
+
+  &:hover:not(.selected) {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .number {
+    text-align: right;
+    opacity: 0.6;
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+    width: 3ch;
+  }
+
+  .title {
+    font-size: clamp(0.9rem, 1.7vw, 1.2rem);
+  }
+
+  .artists {
+    @include mixins.hover-link();
+    cursor: pointer;
+    opacity: 0.5;
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+  }
+}
+
+.cover {
+  img {
+    width: 48px;
+    aspect-ratio: 1/1;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    object-fit: contain;
+  }
+}
+
+@media (orientation: portrait) {
+  .track {
+    .number {
+      width: 12vw;
+    }
+  }
+}
