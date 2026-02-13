@@ -1,17 +1,13 @@
 import { type FC } from "react";
-import { FaList, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
-import styles from "./PlayerOptions.module.scss";
+import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import styles from "./Volume.module.scss";
 import { useTrack } from "../../contexts/TrackContext";
 
-interface PlayerOptionsProps {
-  onToggleQueue: () => void;
+interface Props {
   onVolumeChanged: (value: number) => void;
 }
 
-export const PlayerOptions: FC<PlayerOptionsProps> = ({
-  onToggleQueue,
-  onVolumeChanged,
-}) => {
+export const Volume: FC<Props> = ({ onVolumeChanged }) => {
   const { volume, isMuted, toggleMuted } = useTrack();
   const VolumeIcon = isMuted ? FaVolumeMute : FaVolumeUp;
 
@@ -26,7 +22,6 @@ export const PlayerOptions: FC<PlayerOptionsProps> = ({
         value={isMuted ? 0 : volume}
         onChange={(e) => onVolumeChanged(parseFloat(e.target.value))}
       />
-      <FaList onClick={onToggleQueue} />
     </section>
   );
 };
