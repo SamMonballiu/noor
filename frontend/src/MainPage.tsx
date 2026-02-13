@@ -27,7 +27,6 @@ export const MainPage: FC = () => {
 
   const handlePlay = (track: Metadata, tracks: Metadata[]) => {
     setTrackData(track);
-    setMode("spotlight");
     play(track, () => {
       const next = tracks[track.number!];
       if (next) {
