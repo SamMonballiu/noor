@@ -1,4 +1,4 @@
-import { useEffect, useRef, type FC } from "react";
+import { useEffect, type FC } from "react";
 import { useTrackQueueContext } from "../../contexts/TrackQueueContext";
 import styles from "./Queue.module.scss";
 import { Track } from "../Track/Track";
@@ -13,42 +13,40 @@ export const Queue: FC<Props> = ({ onDoubleClickTrack }) => {
   const { items } = useTrackQueueContext();
   const { track } = useTrack();
 
+  useEffect(() => {
+    if (track?.path) {
+      const playingElement = document.getElementById(
+        `${track.album}-${track.number}`,
+      );
+      playingElement?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [track?.path]);
+
   return (
     <section>
       <div className={styles.queue}>
         <h3>Queue</h3>
         <div className={styles.tracks}>
           {items.length > 0 ? (
-            <>
-              <div>
-                {items.map((item) => {
-                  const isPlaying = item.path === track?.path;
-                  const ref = useRef<HTMLDivElement>(null);
-
-                  useEffect(() => {
-                    if (isPlaying && ref.current) {
-                      ref.current.scrollIntoView({
-                        behavior: "smooth",
-                        block: "nearest",
-                      });
-                    }
-                  }, [isPlaying]);
-                  return (
-                    <div key={item.path} ref={ref}>
-                      <Track
-                        {...item}
-                        showArtist
-                        showCover
-                        onDoubleClick={() => onDoubleClickTrack(item, items)}
-                        className={
-                          item.path === track?.path ? styles.playing : undefined
-                        }
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </>
+            <div>
+              {items.map((item) => {
+                const isPlaying = item.path === track?.path;
+                return (
+                  <div key={item.path} id={`${item.album}-${item.number}`}>
+                    <Track
+                      {...item}
+                      showArtist
+                      showCover
+                      onDoubleClick={() => onDoubleClickTrack(item, items)}
+                      className={isPlaying ? styles.playing : undefined}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           ) : null}
         </div>
       </div>
