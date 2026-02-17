@@ -27,3 +27,12 @@
     text-decoration: underline;
   }
 }
+
+@function accent() {
+  @return linear-gradient(
+    0deg,
+    rgba(253, 187, 45, 1) 0%,
+    rgba(255, 251, 143, 1) 50%,
+    rgba(253, 187, 45, 1) 100%
+  );
+}
