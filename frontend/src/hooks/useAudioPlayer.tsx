@@ -68,9 +68,10 @@ export const useAudioPlayer = () => {
       });
 
       howlRef.current.volume(trackVolume);
+      howlRef.current.mute(isTrackMuted);
       howlRef.current.play();
     },
-    [trackVolume],
+    [trackVolume, isTrackMuted],
   );
 
   const togglePlayPause = useCallback(() => {
@@ -81,7 +82,7 @@ export const useAudioPlayer = () => {
     } else {
       howlRef.current.play();
     }
-  }, [isPlaying]);
+  }, [isPlaying, isTrackMuted]);
 
   const seek = useCallback((position: number) => {
     if (!howlRef.current) return;
