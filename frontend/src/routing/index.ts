@@ -15,9 +15,9 @@ export const routes: RouteMap = {
 export const reservedPaths = ["albums"];
 
 export const isValidArtistRoute = (path: string): boolean => {
-  // valid: /artist/album, /artist
+  // valid: /artist/album, /artist, /artist/
   // invalid: /albums, /artist/album/extra
-  const match = path.match(/^\/([^/]+)(\/(.+))?$/);
+  const match = path.match(/^\/([^/]+)(\/(.+))?\/?$/);
   if (!match) return false;
   const [, artist] = match;
   return !reservedPaths.includes(artist);
