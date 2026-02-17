@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Metadata } from "../models";
+import { useTrackQueueContext } from "./TrackQueueContext";
 
 interface TrackContextType {
   track: Metadata | null;
@@ -32,9 +33,10 @@ interface TrackProviderProps {
 }
 
 export const TrackProvider: FC<TrackProviderProps> = ({ children }) => {
-  const [trackData, setTrackData] = useState<Metadata | null>(null);
   const [volume, setVolume] = useState<number>(0.5);
   const [isMuted, setIsMuted] = useState(true);
+
+  const { activeItem, setActiveItem } = useTrackQueueContext();
 
   const toggleMuted = () => setIsMuted((prev) => !prev);
 
@@ -45,8 +47,8 @@ export const TrackProvider: FC<TrackProviderProps> = ({ children }) => {
   return (
     <TrackContext.Provider
       value={{
-        track: trackData,
-        setTrackData,
+        track: activeItem,
+        setTrackData: setActiveItem,
         volume,
         setVolume,
         isMuted,
