@@ -14,6 +14,11 @@
   }
 }
 
+.disabled {
+  opacity: 0.25 !important;
+  pointer-events: none;
+}
+
 @media (orientation: portrait) {
   .controls {
     width: 100%;
