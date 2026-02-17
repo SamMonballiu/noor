@@ -24,9 +24,10 @@ export const useAudioPlayer = () => {
         if (howlRef.current) {
           const seek = howlRef.current.seek() as number;
           const dur = howlRef.current.duration();
+          // TODO Make track progress an external thing
           setProgress(dur > 0 ? seek / dur : 0);
         }
-      }, 250);
+      }, 1000);
     }
 
     return () => {
