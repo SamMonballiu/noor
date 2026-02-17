@@ -26,4 +26,6 @@ export const useAlbumCoverQuery = (path: string, enabled?: boolean) =>
     },
     staleTime: Infinity,
     enabled,
+    retryOnMount: false,
+    retry: false,
   });
