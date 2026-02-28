@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import styles from "./MainPage.module.scss";
 import { Spotlight } from "./components/Spotlight/Spotlight";
 import { useTrack } from "./contexts/TrackContext";
@@ -15,8 +15,11 @@ import type { Metadata } from "./models";
 import { useRouting } from "./hooks/useRouting";
 import { NowPlaying } from "./components/NowPlaying/NowPlaying";
 import { PlayerControls } from "./components/PlayerControls/PlayerControls";
-import { PlayerOptions } from "./components/PlayerOptions/PlayerOptions";
+import { Volume } from "./components/Volume/Volume";
 import { ProgressBar } from "./components/ProgressBar/ProgressBar";
+import { Queue } from "./components/Queue/Queue";
+import { useTrackQueueContext } from "./contexts/TrackQueueContext";
+import { FaList } from "react-icons/fa";
 
 type Mode = "content" | "spotlight";
 
@@ -24,19 +27,31 @@ export const MainPage: FC = () => {
   const { track, setTrackData } = useTrack();
   const [showQueue, setShowQueue] = useState(false);
   const [mode, setMode] = useState<Mode>("content");
+  const { activeItem, items, setActiveItem, setItems, go } =
+    useTrackQueueContext();
 
   const { play, togglePlayPause, seek, isPlaying, progress, setVolume } =
     useAudioPlayer();
 
   const handlePlay = (track: Metadata, tracks: Metadata[]) => {
     setTrackData(track);
+    setActiveItem(track);
+    setItems(tracks);
     play(track, () => {
       const next = tracks[track.number!];
       if (next) {
         handlePlay(next, tracks);
+      } else {
+        setActiveItem(null);
       }
     });
   };
+
+  useEffect(() => {
+    if (activeItem) {
+      handlePlay(activeItem, items);
+    }
+  }, [activeItem]);
 
   const handleToggleQueue = () => setShowQueue(!showQueue);
 
@@ -111,7 +126,20 @@ export const MainPage: FC = () => {
           />
         ) : null}
 
-        {showQueue && <section className={styles.queue}>queue</section>}
+        <section className={styles.queueButton}>
+          <div
+            style={{ opacity: showQueue ? 1 : 0.25, cursor: "pointer" }}
+            onClick={handleToggleQueue}
+          >
+            <FaList />
+          </div>
+        </section>
+
+        {showQueue && (
+          <section className={styles.queue}>
+            <Queue onDoubleClickTrack={handlePlay} />
+          </section>
+        )}
       </section>
 
       <section className={styles.bottom}>
@@ -123,14 +151,11 @@ export const MainPage: FC = () => {
           <PlayerControls
             isPlaying={isPlaying}
             onPlayPause={togglePlayPause}
-            onPrevious={() => console.log("Previous")}
-            onNext={() => console.log("Next")}
+            onPrevious={go.previous}
+            onNext={go.next}
           />
 
-          <PlayerOptions
-            onToggleQueue={handleToggleQueue}
-            onVolumeChanged={setVolume}
-          />
+          <Volume onVolumeChanged={setVolume} />
         </section>
       </section>
     </div>

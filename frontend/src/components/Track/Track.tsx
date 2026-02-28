@@ -38,12 +38,18 @@ export const Track: FC<TrackProps> = ({
     >
       {showNumber ? (
         <div className={styles.number}>
-          {isSelected ? <FaPlay /> : <span>{number}</span>}
+          {isSelected ? (
+            <FaPlay onClick={onDoubleClick} />
+          ) : (
+            <span>{number}</span>
+          )}
         </div>
       ) : null}
       {showCover && <ImagePreview className={styles.cover} path={albumPath} />}
       <div>
-        <div className={styles.title}>{title}</div>
+        <div className={styles.title}>
+          <span>{title}</span>
+        </div>
         {showArtist
           ? artists?.map((x, idx, arr) => (
               <React.Fragment key={idx}>
