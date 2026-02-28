@@ -2,9 +2,10 @@
 
 .container {
   padding: 32px;
-  display: flex;
-  flex-direction: column;
-  height: 81vh;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 .top {
@@ -34,7 +35,7 @@
 
 .cover {
   img {
-    width: 12vw;
+    width: 8vw;
     object-fit: contain;
     border: 1px solid rgba(255, 255, 255, 0.75);
     box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
