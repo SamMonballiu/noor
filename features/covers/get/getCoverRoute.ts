@@ -11,9 +11,13 @@ export const mapGetCoverRoute: RouteRegistrar = (router) => {
 
     const files = crawler.sync();
     const coverFiles = files.filter((file: string) =>
-      ["cover.jpg", "folder.jpg", "cover.png", "folder.png"].includes(
-        file.toLowerCase(),
-      ),
+      [
+        "cover.jpg",
+        "folder.jpg",
+        "cover.png",
+        "folder.png",
+        "front.jpg",
+      ].includes(file.toLowerCase())
     );
 
     const getThumbnail = async (path: string) => {
@@ -22,7 +26,7 @@ export const mapGetCoverRoute: RouteRegistrar = (router) => {
         thumbnail = await generateThumbnail(
           path,
           { width: 800, height: 800 },
-          75,
+          75
         );
       } catch (err) {
         console.log(err);
