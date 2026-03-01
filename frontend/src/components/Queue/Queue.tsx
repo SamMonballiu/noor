@@ -36,7 +36,7 @@ export const Queue: FC<Props> = ({ onDoubleClickTrack }) => {
       <div className={styles.tracks}>
         {items.length > 0 ? (
           <div>
-            {items.map((item) => {
+            {items.map((item, idx) => {
               const isPlaying = item.path === track?.path;
               return (
                 <div key={item.path} id={`${item.album}-${item.number}`}>
@@ -49,6 +49,8 @@ export const Queue: FC<Props> = ({ onDoubleClickTrack }) => {
                       {...item}
                       showArtist
                       showCover
+                      showNumber
+                      number={idx + 1}
                       onDoubleClick={() => onDoubleClickTrack(item, items)}
                       className={cx(styles.track, {
                         [styles.playing]: isPlaying,
