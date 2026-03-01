@@ -1,19 +1,26 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import { Howl } from "howler";
 import type { Metadata } from "../models";
-import { useTrack } from "../contexts/TrackContext";
 
-export const useAudioPlayer = () => {
+export type AudioPlayer = {
+  play: (track: Metadata, onEnded?: () => void) => void;
+  togglePlayPause: () => void;
+  seek: (position: number) => void;
+  setVolume: (volume: number) => void;
+  isPlaying: boolean;
+  progress: number;
+  duration: number;
+};
+
+export const useAudioPlayer = (
+  trackVolume: number,
+  setTrackVolume: (val: number) => void,
+  isTrackMuted: boolean,
+): AudioPlayer => {
   const howlRef = useRef<Howl | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-
-  const {
-    volume: trackVolume,
-    setVolume: setTrackVolume,
-    isMuted: isTrackMuted,
-  } = useTrack();
 
   // Update progress periodically while playing
   useEffect(() => {
@@ -24,10 +31,9 @@ export const useAudioPlayer = () => {
         if (howlRef.current) {
           const seek = howlRef.current.seek() as number;
           const dur = howlRef.current.duration();
-          // TODO Make track progress an external thing
           setProgress(dur > 0 ? seek / dur : 0);
         }
-      }, 1000);
+      }, 100);
     }
 
     return () => {

@@ -8,6 +8,7 @@ import {
 } from "react";
 import type { Metadata } from "../models";
 import { useTrackQueueContext } from "./TrackQueueContext";
+import { useAudioPlayer, type AudioPlayer } from "../hooks/useAudioPlayer";
 
 interface TrackContextType {
   track: Metadata | null;
@@ -16,6 +17,7 @@ interface TrackContextType {
   setVolume: (value: number) => void;
   isMuted: boolean;
   toggleMuted: () => void;
+  audioPlayer: AudioPlayer;
 }
 
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
@@ -37,6 +39,7 @@ export const TrackProvider: FC<TrackProviderProps> = ({ children }) => {
   const [isMuted, setIsMuted] = useState(true);
 
   const { activeItem, setActiveItem } = useTrackQueueContext();
+  const audioPlayer = useAudioPlayer(volume, setVolume, isMuted);
 
   const toggleMuted = () => setIsMuted((prev) => !prev);
 
@@ -53,6 +56,7 @@ export const TrackProvider: FC<TrackProviderProps> = ({ children }) => {
         setVolume,
         isMuted,
         toggleMuted,
+        audioPlayer,
       }}
     >
       {children}

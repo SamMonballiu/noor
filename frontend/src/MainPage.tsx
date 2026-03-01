@@ -26,7 +26,7 @@ import { Input } from "./components/Input/Input";
 type Mode = "content" | "spotlight";
 
 export const MainPage: FC = () => {
-  const { track, setTrackData } = useTrack();
+  const { track, setTrackData, audioPlayer } = useTrack();
   const [showQueue, setShowQueue] = useState(false);
   const [mode, setMode] = useState<Mode>("content");
   const { activeItem, items, setActiveItem, setItems, go, addItems } =
@@ -34,7 +34,7 @@ export const MainPage: FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { play, togglePlayPause, seek, isPlaying, progress, setVolume } =
-    useAudioPlayer();
+    audioPlayer;
 
   const trackContextMenu = useTrackContextMenu();
 
@@ -57,6 +57,10 @@ export const MainPage: FC = () => {
       handlePlay(activeItem, items);
     }
   }, [activeItem]);
+
+  useEffect(() => {
+    console.log("render");
+  }, []);
 
   const handleToggleQueue = () => setShowQueue(!showQueue);
 
