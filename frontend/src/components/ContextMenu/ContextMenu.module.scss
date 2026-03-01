@@ -1,0 +1,48 @@
+.menuItem {
+  display: flex !important;
+  gap: 8px;
+  align-items: center;
+  svg {
+    font-size: 20px;
+    opacity: 0.75;
+    color: rgb(100, 149, 237);
+  }
+
+  .placeholder {
+    width: 20px;
+  }
+}
+
+.content {
+  background: #222;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  width: 200px;
+  padding: 8px 0;
+  //TODO Z-INDEX
+  z-index: 100;
+}
+
+.item {
+  cursor: pointer;
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  svg {
+    height: 12px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  &:focus {
+    border: none;
+  }
+}
+
+.disabled {
+  cursor: default;
+  opacity: 0.5;
+}

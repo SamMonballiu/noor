@@ -14,9 +14,12 @@ interface ProviderProps {
 
 interface TrackQueueContextType {
   items: TrackData[];
+  addItem: (item: TrackData) => void;
+  addItems: (items: TrackData[]) => void;
   setItems: (items: TrackData[]) => void;
   activeItem: TrackData | null;
   setActiveItem: (item: TrackData | null) => void;
+  has: (t: TrackData) => boolean;
   go: {
     previous: (() => void) | undefined;
     next: (() => void) | undefined;
@@ -41,7 +44,7 @@ export const TrackQueueProvider: FC<ProviderProps> = ({ children }) => {
   const [items, setItems] = useState<TrackData[]>([]);
   const [activeItem, setActiveItem] = useState<TrackData | null>(null);
 
-  const stuff = useMemo(() => {
+  const memo = useMemo(() => {
     const activeTrack = items.find((x) => x.path === activeItem?.path);
     const activeTrackIdx = activeTrack ? items.indexOf(activeTrack) : -1;
 
@@ -63,12 +66,25 @@ export const TrackQueueProvider: FC<ProviderProps> = ({ children }) => {
               }
             : undefined,
       },
+      has: (t: TrackData) => items.some((i) => i.path === t.path),
     };
   }, [activeItem, items]);
 
+  const addItem = (item: TrackData) => setItems([...items, item]);
+  const addItems = (toAdd: TrackData[]) => setItems([...items, ...toAdd]);
+
   return (
     <TrackQueueContext.Provider
-      value={{ items, setItems, activeItem, setActiveItem, go: stuff.go }}
+      value={{
+        items,
+        addItem,
+        addItems,
+        setItems,
+        activeItem,
+        setActiveItem,
+        go: memo.go,
+        has: memo.has,
+      }}
     >
       {children}
     </TrackQueueContext.Provider>
