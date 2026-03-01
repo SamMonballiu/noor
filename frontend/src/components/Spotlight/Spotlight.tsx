@@ -24,7 +24,7 @@ export const Spotlight: FC<SpotlightProps> = ({
   return (
     <section className={styles.spotlight}>
       <FaTimesCircle className={styles.closeIcon} onClick={onClose} />
-      <img src={cover} className={styles.background} />
+      <img src={cover} className={styles.background} onClick={onClose} />
       <div className={styles.content}>
         <img
           className={styles.cover}
