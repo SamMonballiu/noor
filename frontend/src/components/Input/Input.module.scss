@@ -1,0 +1,23 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  gap: 6px;
+  border-radius: 12px;
+  border: 1px solid #555;
+  svg {
+    color: #555;
+  }
+}
+
+.input {
+  background: transparent;
+  color: white;
+  border: none;
+  flex-grow: 1;
+  font-weight: bolder;
+}
+
+.clearIcon {
+  cursor: pointer;
+}
