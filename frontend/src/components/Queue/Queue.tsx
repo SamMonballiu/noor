@@ -5,6 +5,8 @@ import { Track } from "../Track/Track";
 import type { Metadata } from "../../models";
 import { useTrack } from "../../contexts/TrackContext";
 import cx from "classnames";
+import { useQueueItemContextMenu } from "../../hooks/useQueueItemContextMenu";
+import { ContextMenu } from "../ContextMenu/ContextMenu";
 
 interface Props {
   onDoubleClickTrack: (track: Metadata, queue: Metadata[]) => void;
@@ -13,6 +15,8 @@ interface Props {
 export const Queue: FC<Props> = ({ onDoubleClickTrack }) => {
   const { items } = useTrackQueueContext();
   const { track } = useTrack();
+
+  const contextMenu = useQueueItemContextMenu();
 
   useEffect(() => {
     if (track?.path) {
@@ -36,15 +40,21 @@ export const Queue: FC<Props> = ({ onDoubleClickTrack }) => {
               const isPlaying = item.path === track?.path;
               return (
                 <div key={item.path} id={`${item.album}-${item.number}`}>
-                  <Track
-                    {...item}
-                    showArtist
-                    showCover
-                    onDoubleClick={() => onDoubleClickTrack(item, items)}
-                    className={cx(styles.track, {
-                      [styles.playing]: isPlaying,
-                    })}
-                  />
+                  <ContextMenu
+                    context={item}
+                    handlers={contextMenu}
+                    getId={(item) => item.path}
+                  >
+                    <Track
+                      {...item}
+                      showArtist
+                      showCover
+                      onDoubleClick={() => onDoubleClickTrack(item, items)}
+                      className={cx(styles.track, {
+                        [styles.playing]: isPlaying,
+                      })}
+                    />
+                  </ContextMenu>
                 </div>
               );
             })}
