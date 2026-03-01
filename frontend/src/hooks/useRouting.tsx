@@ -6,6 +6,8 @@ import {
 } from "../routing";
 // @ts-ignore;
 import friendlyUrl from "friendly-url-extended";
+import type { AlbumData } from "../models";
+import { getMainArtist } from "../models/util";
 
 const url = friendlyUrl;
 
@@ -49,8 +51,12 @@ export const useRouting = () => {
   const navigateToArtist = (artist: string) => {
     navigateTo(routes.artist, { artist: url(artist), album: "" });
   };
-  const navigateToAlbum = (artist: string, album: string) => {
-    navigateTo(routes.artist, { artist: url(artist), album: url(album) });
+
+  const navigateToAlbum = (album: AlbumData) => {
+    navigateTo(routes.artist, {
+      artist: url(getMainArtist(album.artists)),
+      album: url(album.title),
+    });
   };
 
   const [isAlbumsRoute] = useRoute<RouteParams>(routes.allAlbums);

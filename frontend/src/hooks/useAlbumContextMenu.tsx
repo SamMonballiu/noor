@@ -20,7 +20,7 @@ export const useAlbumContextMenu = () => {
       label: "Go to album",
       icon: <MdMusicNote />,
       disabled: () => route.is.album,
-      onClick: (a) => navigate.toAlbum(getMainArtist(a.artists), a.title),
+      onClick: navigate.toAlbum,
     },
     {
       label: "Add to queue",

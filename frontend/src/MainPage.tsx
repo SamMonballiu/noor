@@ -85,11 +85,7 @@ export const MainPage: FC = () => {
         >
           <Switch>
             <Route path={routes.allAlbums}>
-              <AlbumsList
-                onSelect={(mainArtist, albumName) =>
-                  navigate.toAlbum(mainArtist, albumName)
-                }
-              />
+              <AlbumsList onSelect={navigate.toAlbum} />
             </Route>
             <Route path="/">
               <Redirect to="/albums" />
@@ -104,11 +100,7 @@ export const MainPage: FC = () => {
                     trackContextMenu={trackContextMenu}
                   />
                 ) : (
-                  <AlbumsList
-                    onSelect={(mainArtist, albumName) =>
-                      navigate.toAlbum(mainArtist, albumName)
-                    }
-                  />
+                  <AlbumsList onSelect={navigate.toAlbum} />
                 )}
               </Route>
             ) : null}

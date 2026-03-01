@@ -10,7 +10,7 @@ import { useRouting } from "../../hooks/useRouting";
 import { Album } from "../Album/Album";
 
 interface Props {
-  onSelect: (artistName: string, albumName: string) => void;
+  onSelect: (album: AlbumData) => void;
 }
 export const AlbumsList: FC<Props> = ({ onSelect }) => {
   const { data, isLoading } = useAlbumsQuery();
@@ -51,7 +51,7 @@ export const AlbumsList: FC<Props> = ({ onSelect }) => {
         <AlbumItem
           key={album.title}
           data={album}
-          onSelect={() => onSelect(getMainArtist(album.artists), album.title)}
+          onSelect={() => onSelect(album)}
         />
       ))}
     </div>
