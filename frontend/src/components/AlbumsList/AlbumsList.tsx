@@ -11,10 +11,13 @@ import { Album } from "../Album/Album";
 
 interface Props {
   onSelect: (album: AlbumData) => void;
+  searchTerm?: string;
 }
-export const AlbumsList: FC<Props> = ({ onSelect }) => {
-  const { data, isLoading } = useAlbumsQuery();
+export const AlbumsList: FC<Props> = ({ onSelect, searchTerm }) => {
   const { route } = useRouting();
+  const { data, isLoading } = useAlbumsQuery(
+    route.is.allAlbums ? searchTerm : undefined,
+  );
 
   const albumData = useMemo<AlbumDataWithTracks[]>(() => {
     if (isLoading || !data) {

@@ -2,12 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import type { AlbumResponse } from "./models";
 
-export const useAlbumsQuery = () =>
+export const useAlbumsQuery = (searchTerm?: string) =>
   useQuery<AlbumResponse>({
-    queryKey: ["albums"],
+    queryKey: ["albums", searchTerm],
     queryFn: async () => {
       const response = await axios.get<AlbumResponse>(
-        `${import.meta.env.VITE_DEVPREFIX}/api/albums`,
+        `${import.meta.env.VITE_DEVPREFIX}/api/albums` +
+          (searchTerm ? `?searchTerm=${searchTerm}` : ""),
       );
       return response.data;
     },

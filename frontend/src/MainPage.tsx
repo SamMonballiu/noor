@@ -21,6 +21,7 @@ import { Queue } from "./components/Queue/Queue";
 import { useTrackQueueContext } from "./contexts/TrackQueueContext";
 import { FaList } from "react-icons/fa";
 import { useTrackContextMenu } from "./hooks/useTrackContextMenu";
+import { Input } from "./components/Input/Input";
 
 type Mode = "content" | "spotlight";
 
@@ -30,6 +31,7 @@ export const MainPage: FC = () => {
   const [mode, setMode] = useState<Mode>("content");
   const { activeItem, items, setActiveItem, setItems, go } =
     useTrackQueueContext();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { play, togglePlayPause, seek, isPlaying, progress, setVolume } =
     useAudioPlayer();
@@ -85,7 +87,10 @@ export const MainPage: FC = () => {
         >
           <Switch>
             <Route path={routes.allAlbums}>
-              <AlbumsList onSelect={navigate.toAlbum} />
+              <section className={styles.input}>
+                <Input value={searchTerm} onChange={setSearchTerm} />
+              </section>
+              <AlbumsList onSelect={navigate.toAlbum} searchTerm={searchTerm} />
             </Route>
             <Route path="/">
               <Redirect to="/albums" />
