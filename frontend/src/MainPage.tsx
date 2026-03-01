@@ -20,6 +20,7 @@ import { ProgressBar } from "./components/ProgressBar/ProgressBar";
 import { Queue } from "./components/Queue/Queue";
 import { useTrackQueueContext } from "./contexts/TrackQueueContext";
 import { FaList } from "react-icons/fa";
+import { useTrackContextMenu } from "./hooks/useTrackContextMenu";
 
 type Mode = "content" | "spotlight";
 
@@ -32,6 +33,8 @@ export const MainPage: FC = () => {
 
   const { play, togglePlayPause, seek, isPlaying, progress, setVolume } =
     useAudioPlayer();
+
+  const trackContextMenu = useTrackContextMenu();
 
   const handlePlay = (track: Metadata, tracks: Metadata[]) => {
     setTrackData(track);
@@ -96,7 +99,10 @@ export const MainPage: FC = () => {
             {isValidArtistRoute(route.path) ? (
               <Route path={routes.artist}>
                 {route.params.album ? (
-                  <AlbumTrackList onPlay={handlePlay} />
+                  <AlbumTrackList
+                    onPlay={handlePlay}
+                    trackContextMenu={trackContextMenu}
+                  />
                 ) : (
                   <AlbumsList
                     onSelect={(mainArtist, albumName) =>

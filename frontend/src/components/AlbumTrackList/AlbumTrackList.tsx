@@ -2,21 +2,21 @@ import React, { useMemo, useState, type FC } from "react";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
 import { useAlbumsQuery } from "../../query";
-import type { AlbumData, Metadata } from "../../models";
-import { ImagePreview } from "../ImagePreview/ImagePreview";
+import type { AlbumDataWithTracks, Metadata } from "../../models";
 import styles from "./AlbumTrackList.module.scss";
-import cx from "classnames";
-import { FaPlay } from "react-icons/fa";
 import { Artists } from "../Artists/Artists";
 import { getArtistsMap } from "../../models/util";
 import { useRouting } from "../../hooks/useRouting";
 import { Track } from "../Track/Track";
+import { ContextMenu, type ContextHandler } from "../ContextMenu/ContextMenu";
+import { Album } from "../Album/Album";
 
 interface Props {
   onPlay: (track: Metadata, tracks: Metadata[]) => void;
+  trackContextMenu?: ContextHandler<Metadata>[];
 }
 
-export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
+export const AlbumTrackList: FC<Props> = ({ onPlay, trackContextMenu }) => {
   const { route, navigate } = useRouting();
   const { data, isLoading } = useAlbumsQuery();
 
@@ -24,7 +24,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
     null,
   );
 
-  const album = useMemo<AlbumData & { tracks: Metadata[] }>(() => {
+  const album = useMemo<AlbumDataWithTracks>(() => {
     const empty = {
       title: "",
       artists: {},
@@ -52,9 +52,7 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
   return (
     <div className={styles.container}>
       <section className={styles.top}>
-        {album.path && (
-          <ImagePreview className={styles.cover} path={album.path} />
-        )}
+        {album.path && <Album album={album} className={styles.cover} />}
         <section className={styles.details}>
           <h1>{album.title}</h1>
           <h4>
@@ -67,16 +65,24 @@ export const AlbumTrackList: FC<Props> = ({ onPlay }) => {
       </section>
       <section className={styles.tracks}>
         {album.tracks.sort(byNumber).map((t, idx) => (
-          <Track
-            key={t.number}
-            {...t}
-            className={selectedTrackIndex === idx ? styles.selected : undefined}
-            onDoubleClick={() => onPlay(t, album.tracks)}
-            onClick={() => setSelectedTrackIndex(idx)}
-            isSelected={selectedTrackIndex === idx}
-            showArtist={Object.keys(album.artists).length > 1}
-            showNumber
-          />
+          <ContextMenu
+            context={t}
+            handlers={trackContextMenu}
+            getId={(t) => t.path}
+          >
+            <Track
+              key={t.number}
+              {...t}
+              className={
+                selectedTrackIndex === idx ? styles.selected : undefined
+              }
+              onDoubleClick={() => onPlay(t, album.tracks)}
+              onClick={() => setSelectedTrackIndex(idx)}
+              isSelected={selectedTrackIndex === idx}
+              showArtist={Object.keys(album.artists).length > 1}
+              showNumber
+            />
+          </ContextMenu>
         ))}
       </section>
     </div>
