@@ -3,17 +3,23 @@ import styles from "./AlbumsList.module.scss";
 import { useAlbumsQuery } from "../../query";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
-import type { AlbumData, AlbumDataWithTracks } from "../../models";
+import type { AlbumData, AlbumDataWithTracks, Metadata } from "../../models";
 import { getArtistsMap, getMainArtist } from "../../models/util";
 import { Artists } from "../Artists/Artists";
 import { useRouting } from "../../hooks/useRouting";
 import { Album } from "../Album/Album";
+import { Button } from "../Button/Button";
 
 interface Props {
   onSelect: (album: AlbumData) => void;
+  onQueueSearchResults?: (albums: AlbumDataWithTracks[]) => void;
   searchTerm?: string;
 }
-export const AlbumsList: FC<Props> = ({ onSelect, searchTerm }) => {
+export const AlbumsList: FC<Props> = ({
+  onSelect,
+  onQueueSearchResults,
+  searchTerm,
+}) => {
   const { route } = useRouting();
   const { data, isLoading } = useAlbumsQuery(
     route.is.allAlbums ? searchTerm : undefined,
@@ -49,15 +55,29 @@ export const AlbumsList: FC<Props> = ({ onSelect, searchTerm }) => {
   }, [data, isLoading]);
 
   return (
-    <div className={styles.container}>
-      {albumData.sort(byArtistThenByYear).map((album) => (
-        <AlbumItem
-          key={album.title}
-          data={album}
-          onSelect={() => onSelect(album)}
-        />
-      ))}
-    </div>
+    <section>
+      {searchTerm && !isLoading ? (
+        <div className={styles.results}>
+          <span>Search returned {albumData.length} albums.</span>
+          {onQueueSearchResults ? (
+            <Button
+              label="Add all to queue"
+              onClick={() => onQueueSearchResults?.(albumData)}
+            />
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className={styles.container}>
+        {albumData.sort(byArtistThenByYear).map((album) => (
+          <AlbumItem
+            key={album.title}
+            data={album}
+            onSelect={() => onSelect(album)}
+          />
+        ))}
+      </div>
+    </section>
   );
 };
 

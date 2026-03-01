@@ -4,6 +4,16 @@
   }
 }
 
+.results {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  span {
+    color: #999;
+  }
+}
+
 .container {
   padding: 12px;
   display: grid;

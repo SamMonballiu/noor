@@ -11,7 +11,7 @@ import { useAudioPlayer } from "./hooks/useAudioPlayer";
 import friendlyUrl from "friendly-url-extended";
 import { MdMusicNote, MdPerson } from "react-icons/md";
 import cx from "classnames";
-import type { Metadata } from "./models";
+import type { AlbumDataWithTracks, Metadata } from "./models";
 import { useRouting } from "./hooks/useRouting";
 import { NowPlaying } from "./components/NowPlaying/NowPlaying";
 import { PlayerControls } from "./components/PlayerControls/PlayerControls";
@@ -29,7 +29,7 @@ export const MainPage: FC = () => {
   const { track, setTrackData } = useTrack();
   const [showQueue, setShowQueue] = useState(false);
   const [mode, setMode] = useState<Mode>("content");
-  const { activeItem, items, setActiveItem, setItems, go } =
+  const { activeItem, items, setActiveItem, setItems, go, addItems } =
     useTrackQueueContext();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -62,6 +62,11 @@ export const MainPage: FC = () => {
 
   const { route, navigate } = useRouting();
 
+  function handleQueueSearchResults(albums: AlbumDataWithTracks[]): void {
+    const tracks = albums.flatMap((x) => x.tracks);
+    addItems(tracks);
+  }
+
   return (
     <div className={styles.container}>
       <section className={styles.top}>
@@ -90,7 +95,11 @@ export const MainPage: FC = () => {
               <section className={styles.input}>
                 <Input value={searchTerm} onChange={setSearchTerm} />
               </section>
-              <AlbumsList onSelect={navigate.toAlbum} searchTerm={searchTerm} />
+              <AlbumsList
+                onSelect={navigate.toAlbum}
+                searchTerm={searchTerm}
+                onQueueSearchResults={handleQueueSearchResults}
+              />
             </Route>
             <Route path="/">
               <Redirect to="/albums" />
