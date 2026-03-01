@@ -1,9 +1,12 @@
-import { Response } from "express";
-import { group } from "../../../models/group";
+import { Request, Response } from "express";
 import { RouteRegistrar } from "../../../models/routeRegistrar";
+import { AlbumsQuery } from "./getAlbumsQuery";
 
-export const mapGetAlbumsRoute: RouteRegistrar = (router, dataContext) => {
-  router.get("/albums", async (_, res: Response) => {
-    res.send(group.byAlbum(dataContext.mediaFiles));
-  });
+export const mapGetAlbumsRoute: RouteRegistrar = (router, _, queryResolver) => {
+  router.get("/albums", async (req: Request, res: Response) =>
+    queryResolver.resolve(
+      new AlbumsQuery(req.query["searchTerm"] as string),
+      res,
+    ),
+  );
 };

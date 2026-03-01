@@ -10,6 +10,7 @@ import { DataContext } from "./models/dataContext";
 import { mapGetCoverRoute } from "./features/covers/get/getCoverRoute";
 import path from "path";
 import { mapGetAudioRoute } from "./features/audio/get/getAudioRoute";
+import { QueryResolver } from "@queries/base";
 
 const port = 54321;
 
@@ -34,9 +35,11 @@ const dataContext: DataContext = {
   mediaFiles: [],
 };
 
-mapGetAlbumsRoute(apiRouter, dataContext);
-mapGetCoverRoute(apiRouter, dataContext);
-mapGetAudioRoute(apiRouter, dataContext);
+const queryResolver = new QueryResolver(dataContext);
+
+mapGetAlbumsRoute(apiRouter, dataContext, queryResolver);
+mapGetCoverRoute(apiRouter, dataContext, queryResolver);
+mapGetAudioRoute(apiRouter, dataContext, queryResolver);
 
 // All other routes to be handled clientside
 app.get("*", (_, res: Response) => {

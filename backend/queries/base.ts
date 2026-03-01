@@ -1,6 +1,6 @@
-import { AlbumsQueryHandler } from "../../features/albums/get/getAlbumsQuery";
-import { DataContext } from "../../models/dataContext";
 import { Response } from "express";
+import { AlbumsQueryHandler } from "features/albums/get/getAlbumsQuery";
+import { DataContext } from "models/dataContext";
 
 export interface Query {}
 
