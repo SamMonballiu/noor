@@ -1,12 +1,14 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type FC,
   type ReactNode,
 } from "react";
 import type { Metadata as TrackData } from "../models";
+import { useAudioPlayer, type AudioPlayer } from "../hooks/useAudioPlayer";
 
 interface ProviderProps {
   children: ReactNode;
@@ -27,6 +29,11 @@ interface TrackQueueContextType {
     previous: (() => void) | undefined;
     next: (() => void) | undefined;
   };
+  volume: number;
+  setVolume: (value: number) => void;
+  isMuted: boolean;
+  toggleMuted: () => void;
+  audioPlayer: AudioPlayer;
 }
 
 const TrackQueueContext = createContext<TrackQueueContextType | undefined>(
@@ -44,6 +51,16 @@ export const useTrackQueueContext = () => {
 };
 
 export const TrackQueueProvider: FC<ProviderProps> = ({ children }) => {
+  const [volume, setVolume] = useState<number>(0.5);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const audioPlayer = useAudioPlayer(volume, setVolume, isMuted);
+
+  const toggleMuted = () => setIsMuted((prev) => !prev);
+  useEffect(() => {
+    setIsMuted(volume === 0);
+  }, [volume]);
+
   const [items, setItems] = useState<TrackData[]>([]);
   const [activeItem, setActiveItem] = useState<TrackData | null>(null);
 
@@ -117,6 +134,11 @@ export const TrackQueueProvider: FC<ProviderProps> = ({ children }) => {
         isActiveItem,
         go: memo.go,
         has: memo.has,
+        volume,
+        setVolume,
+        isMuted,
+        toggleMuted,
+        audioPlayer,
       }}
     >
       {children}

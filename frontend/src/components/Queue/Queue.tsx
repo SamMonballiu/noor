@@ -3,7 +3,6 @@ import { useTrackQueueContext } from "../../contexts/TrackQueueContext";
 import styles from "./Queue.module.scss";
 import { Track } from "../Track/Track";
 import type { Metadata } from "../../models";
-import { useTrack } from "../../contexts/TrackContext";
 import cx from "classnames";
 import { useQueueItemContextMenu } from "../../hooks/useQueueItemContextMenu";
 import { ContextMenu } from "../ContextMenu/ContextMenu";
@@ -13,8 +12,7 @@ interface Props {
 }
 
 export const Queue: FC<Props> = ({ onDoubleClickTrack }) => {
-  const { items } = useTrackQueueContext();
-  const { track } = useTrack();
+  const { items, activeItem: track } = useTrackQueueContext();
 
   const contextMenu = useQueueItemContextMenu();
 

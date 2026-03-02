@@ -1,12 +1,10 @@
 import { useEffect, useState, type FC } from "react";
 import styles from "./MainPage.module.scss";
 import { Spotlight } from "./components/Spotlight/Spotlight";
-import { useTrack } from "./contexts/TrackContext";
 import { AlbumsList } from "./components/AlbumsList/AlbumsList";
 import { Redirect, Route, Switch } from "wouter";
 import { routes, isValidArtistRoute } from "./routing";
 import { AlbumTrackList } from "./components/AlbumTrackList/AlbumTrackList";
-import { useAudioPlayer } from "./hooks/useAudioPlayer";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
 import { MdMusicNote, MdPerson } from "react-icons/md";
@@ -26,11 +24,17 @@ import { Input } from "./components/Input/Input";
 type Mode = "content" | "spotlight";
 
 export const MainPage: FC = () => {
-  const { track, setTrackData, audioPlayer } = useTrack();
   const [showQueue, setShowQueue] = useState(false);
   const [mode, setMode] = useState<Mode>("content");
-  const { activeItem, items, setActiveItem, setItems, go, addItems } =
-    useTrackQueueContext();
+  const {
+    activeItem,
+    items,
+    setActiveItem,
+    setItems,
+    go,
+    addItems,
+    audioPlayer,
+  } = useTrackQueueContext();
   const [searchTerm, setSearchTerm] = useState("");
 
   const { play, togglePlayPause, seek, isPlaying, progress, setVolume } =
@@ -39,7 +43,6 @@ export const MainPage: FC = () => {
   const trackContextMenu = useTrackContextMenu();
 
   const handlePlay = (track: Metadata, tracks: Metadata[]) => {
-    setTrackData(track);
     setActiveItem(track);
     setItems(tracks);
     play(track, () => {
@@ -125,14 +128,14 @@ export const MainPage: FC = () => {
           </Switch>
         </section>
 
-        {mode === "spotlight" && track ? (
+        {mode === "spotlight" && activeItem ? (
           <Spotlight
-            track={track!}
+            track={activeItem!}
             onClose={() => setMode("content")}
             onAlbumClick={() => {
               setMode("content");
               navigate.to(routes.allAlbums, {
-                album: friendlyUrl(track.album),
+                album: friendlyUrl(activeItem.album),
               });
             }}
             onArtistClick={(artist) => {

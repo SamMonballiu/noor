@@ -1,14 +1,14 @@
 import { type FC } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import styles from "./Volume.module.scss";
-import { useTrack } from "../../contexts/TrackContext";
+import { useTrackQueueContext } from "../../contexts/TrackQueueContext";
 
 interface Props {
   onVolumeChanged: (value: number) => void;
 }
 
 export const Volume: FC<Props> = ({ onVolumeChanged }) => {
-  const { volume, isMuted, toggleMuted } = useTrack();
+  const { volume, isMuted, toggleMuted } = useTrackQueueContext();
   const VolumeIcon = isMuted ? FaVolumeMute : FaVolumeUp;
 
   return (

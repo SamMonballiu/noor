@@ -1,13 +1,13 @@
 import { type FC } from "react";
 import styles from "./NowPlaying.module.scss";
-import { useTrack } from "../../contexts/TrackContext";
 import { ImagePreview } from "../ImagePreview/ImagePreview";
+import { useTrackQueueContext } from "../../contexts/TrackQueueContext";
 
 interface Props {
   onClick?: () => void;
 }
 export const NowPlaying: FC<Props> = ({ onClick }) => {
-  const { track } = useTrack();
+  const { activeItem: track } = useTrackQueueContext();
 
   return (
     <section className={styles.playing}>
