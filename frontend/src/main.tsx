@@ -6,6 +6,10 @@ import { TrackQueueProvider } from "./contexts/TrackQueueContext.tsx";
 
 const queryClient = new QueryClient();
 
+if (import.meta.env.DEV) {
+  document.title = "[DEV] " + document.title;
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
