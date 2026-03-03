@@ -50,6 +50,7 @@ app.listen(port, async () => {
   console.log(`Server started on port ${port}.`);
 
   const folder = process.env.MEDIA_PATH;
+  //TODO exit if no folder
   const directoryCrawler = new fdir()
     .withMaxDepth(10)
     .withRelativePaths()
@@ -60,6 +61,8 @@ app.listen(port, async () => {
   const filtered = crawled.filter((path: string) =>
     extensions.some((ext) => path.endsWith(ext)),
   );
+
+  const sanitize = (path: string) => path.replace(folder!, "");
 
   console.log(`Parsing ${filtered.length} files.`);
 
@@ -76,8 +79,8 @@ app.listen(port, async () => {
       year: metadata.common.year ?? undefined,
       genre: metadata.common.genre,
       duration: metadata.format.duration,
-      path: fullPath,
-      albumPath: fullPath.split("/").slice(0, -1).join("/"),
+      path: sanitize(fullPath),
+      albumPath: sanitize(fullPath.split("/").slice(0, -1).join("/")),
     });
   }
   console.log("Done.");

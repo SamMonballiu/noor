@@ -17,7 +17,10 @@ export const mapGetAudioRoute: RouteRegistrar = (router, dataContext) => {
       return res.status(404).send("Track not found");
     }
 
-    const stat = fs.statSync(trackPath);
+    const baseUrl = process.env.MEDIA_PATH!;
+    const joinedPath = path.join(baseUrl, trackPath);
+
+    const stat = fs.statSync(joinedPath);
     const fileSize = stat.size;
     const range = req.headers.range;
 
@@ -28,8 +31,8 @@ export const mapGetAudioRoute: RouteRegistrar = (router, dataContext) => {
       const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
       const chunkSize = end - start + 1;
 
-      const stream = fs.createReadStream(trackPath, { start, end });
-      const ext = path.extname(trackPath).toLowerCase();
+      const stream = fs.createReadStream(joinedPath, { start, end });
+      const ext = path.extname(joinedPath).toLowerCase();
       const contentType = ext === ".ogg" ? "audio/ogg" : "audio/mpeg";
 
       res.writeHead(206, {
@@ -42,7 +45,7 @@ export const mapGetAudioRoute: RouteRegistrar = (router, dataContext) => {
       stream.pipe(res);
     } else {
       // No range header - send entire file
-      const ext = path.extname(trackPath).toLowerCase();
+      const ext = path.extname(joinedPath).toLowerCase();
       const contentType = ext === ".ogg" ? "audio/ogg" : "audio/mpeg";
 
       res.writeHead(200, {
@@ -50,7 +53,7 @@ export const mapGetAudioRoute: RouteRegistrar = (router, dataContext) => {
         "Content-Type": contentType,
       });
 
-      fs.createReadStream(trackPath).pipe(res);
+      fs.createReadStream(joinedPath).pipe(res);
     }
   });
 };
