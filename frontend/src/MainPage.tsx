@@ -14,12 +14,12 @@ import { useRouting } from "./hooks/useRouting";
 import { NowPlaying } from "./components/NowPlaying/NowPlaying";
 import { PlayerControls } from "./components/PlayerControls/PlayerControls";
 import { Volume } from "./components/Volume/Volume";
-import { ProgressBar } from "./components/ProgressBar/ProgressBar";
 import { Queue } from "./components/Queue/Queue";
 import { useTrackQueueContext } from "./contexts/TrackQueueContext";
 import { FaList } from "react-icons/fa";
 import { useTrackContextMenu } from "./hooks/useTrackContextMenu";
 import { Input } from "./components/Input/Input";
+import { TrackProgressBar } from "./components/TrackProgressBar/TrackProgressBar";
 
 type Mode = "content" | "spotlight";
 
@@ -34,25 +34,19 @@ export const MainPage: FC = () => {
     go,
     addItems,
     audioPlayer,
+    setVolume,
+    isPlaying,
   } = useTrackQueueContext();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { play, togglePlayPause, seek, isPlaying, progress, setVolume } =
-    audioPlayer;
+  const { play, togglePlayPause, seek } = audioPlayer;
 
   const trackContextMenu = useTrackContextMenu();
 
   const handlePlay = (track: Metadata, tracks: Metadata[]) => {
     setActiveItem(track);
     setItems(tracks);
-    play(track, () => {
-      const next = tracks[track.number!];
-      if (next) {
-        handlePlay(next, tracks);
-      } else {
-        setActiveItem(null);
-      }
-    });
+    play(track);
   };
 
   useEffect(() => {
@@ -60,10 +54,6 @@ export const MainPage: FC = () => {
       handlePlay(activeItem, items);
     }
   }, [activeItem]);
-
-  useEffect(() => {
-    console.log("render");
-  }, []);
 
   const handleToggleQueue = () => setShowQueue(!showQueue);
 
@@ -162,7 +152,7 @@ export const MainPage: FC = () => {
       </section>
 
       <section className={styles.bottom}>
-        <ProgressBar value={progress} onSeek={seek} />
+        <TrackProgressBar onSeek={seek} />
 
         <section className={styles.controls}>
           <NowPlaying onClick={() => setMode("spotlight")} />

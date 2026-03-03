@@ -1,14 +1,16 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type FC,
   type ReactNode,
 } from "react";
 import type { Metadata as TrackData } from "../models";
-import { useAudioPlayer, type AudioPlayer } from "../hooks/useAudioPlayer";
+import { AudioPlayer } from "../models/audioPlayer";
 
 interface ProviderProps {
   children: ReactNode;
@@ -33,6 +35,7 @@ interface TrackQueueContextType {
   setVolume: (value: number) => void;
   isMuted: boolean;
   toggleMuted: () => void;
+  isPlaying: boolean;
   audioPlayer: AudioPlayer;
 }
 
@@ -52,11 +55,9 @@ export const useTrackQueueContext = () => {
 
 export const TrackQueueProvider: FC<ProviderProps> = ({ children }) => {
   const [volume, setVolume] = useState<number>(0.5);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const audioPlayer = useAudioPlayer(volume, setVolume, isMuted);
-
-  const toggleMuted = () => setIsMuted((prev) => !prev);
   useEffect(() => {
     setIsMuted(volume === 0);
   }, [volume]);
@@ -89,6 +90,43 @@ export const TrackQueueProvider: FC<ProviderProps> = ({ children }) => {
       has: (t: TrackData) => items.some((i) => i.path === t.path),
     };
   }, [activeItem, items]);
+
+  // Use ref to access latest go.next without re-subscribing
+  const goNextRef = useRef(memo.go.next);
+  useEffect(() => {
+    goNextRef.current = memo.go.next;
+  }, [memo.go.next]);
+
+  const audioPlayer = useMemo(() => new AudioPlayer(), []);
+
+  const toggleMuted = useCallback(() => {
+    audioPlayer.toggleMuted();
+  }, [audioPlayer]);
+
+  const setTrackVolume = useCallback(
+    (val: number) => {
+      audioPlayer.setVolume(val);
+    },
+    [audioPlayer],
+  );
+
+  // Event subscriptions
+  useEffect(() => {
+    const subscriptions = [
+      audioPlayer.onEnded.subscribe(() => {
+        goNextRef.current?.();
+      }),
+      audioPlayer.onMutedChanged.subscribe(setIsMuted),
+      audioPlayer.onVolumeChanged.subscribe(setVolume),
+      audioPlayer.onPlayingChanged.subscribe(setIsPlaying),
+    ];
+
+    return () => {
+      for (const unsubscribe of subscriptions) {
+        unsubscribe();
+      }
+    };
+  }, [audioPlayer, setIsMuted, setVolume]);
 
   const addItem = (item: TrackData) => setItems([...items, item]);
   const addItems = (toAdd: TrackData[]) => setItems([...items, ...toAdd]);
@@ -135,9 +173,10 @@ export const TrackQueueProvider: FC<ProviderProps> = ({ children }) => {
         go: memo.go,
         has: memo.has,
         volume,
-        setVolume,
+        setVolume: setTrackVolume,
         isMuted,
         toggleMuted,
+        isPlaying,
         audioPlayer,
       }}
     >
