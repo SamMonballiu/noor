@@ -2,15 +2,14 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import express, { Response } from "express";
 import cors from "cors";
-const { fdir } = require("fdir");
-import { parseFile } from "music-metadata";
-import { Metadata } from "./models/metadata";
 import { mapGetAlbumsRoute } from "./features/albums/get/getAlbumsRoute";
 import { DataContext } from "./models/dataContext";
 import { mapGetCoverRoute } from "./features/covers/get/getCoverRoute";
 import path from "path";
 import { mapGetAudioRoute } from "./features/audio/get/getAudioRoute";
 import { QueryResolver } from "@queries/base";
+import fs from "fs";
+import chokidar from "chokidar";
 
 const port = 54321;
 
@@ -47,41 +46,27 @@ app.get("*", (_, res: Response) => {
 });
 
 app.listen(port, async () => {
-  console.log(`Server started on port ${port}.`);
+  const filename = "tracks.json";
+  const parseTracks = () => {
+    const tracks = JSON.parse(fs.readFileSync(filename, { encoding: "utf8" }));
+    dataContext.mediaFiles = tracks;
+  };
 
-  const folder = process.env.MEDIA_PATH;
-  //TODO exit if no folder
-  const directoryCrawler = new fdir()
-    .withMaxDepth(10)
-    .withRelativePaths()
-    .crawl(folder);
-
-  const crawled = directoryCrawler.sync();
-  const extensions = [".mp3", ".ogg"];
-  const filtered = crawled.filter((path: string) =>
-    extensions.some((ext) => path.endsWith(ext)),
-  );
-
-  const sanitize = (path: string) => path.replace(folder!, "");
-
-  console.log(`Parsing ${filtered.length} files.`);
-
-  for (const filePath of filtered) {
-    const fullPath = `${folder}/${filePath}`;
-    const metadata = await parseFile(fullPath, {
-      skipCovers: true,
-    });
-    dataContext.mediaFiles.push({
-      number: metadata.common.track.no ?? undefined,
-      title: metadata.common.title,
-      album: metadata.common.album,
-      artists: metadata.common.artists,
-      year: metadata.common.year ?? undefined,
-      genre: metadata.common.genre,
-      duration: metadata.format.duration,
-      path: sanitize(fullPath),
-      albumPath: sanitize(fullPath.split("/").slice(0, -1).join("/")),
-    });
+  console.log(`Reading ${filename}...`);
+  if (fs.existsSync(filename)) {
+    parseTracks();
+  } else {
+    dataContext.mediaFiles = [];
   }
+
+  const watcher = chokidar.watch(filename, {
+    awaitWriteFinish: true,
+    interval: 2000,
+  });
+  watcher.on("change", () => {
+    console.log(`${filename} has been modified, repopulating.`);
+    parseTracks();
+  });
+
   console.log("Done.");
 });

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node server.ts"
+    "start": "ts-node server.ts",
+    "crawler": "ts-node crawler.ts"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +13,7 @@
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "chokidar": "^5.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^4.18.2",
