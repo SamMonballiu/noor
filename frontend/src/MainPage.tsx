@@ -135,20 +135,24 @@ export const MainPage: FC = () => {
           />
         ) : null}
 
-        <section className={styles.queueButton}>
-          <div
-            style={{ opacity: showQueue ? 1 : 0.25, cursor: "pointer" }}
-            onClick={handleToggleQueue}
-          >
-            <FaList />
-          </div>
-        </section>
+        {mode !== "spotlight" ? (
+          <>
+            <section className={styles.queueButton}>
+              <div
+                style={{ opacity: showQueue ? 1 : 0.25, cursor: "pointer" }}
+                onClick={handleToggleQueue}
+              >
+                <FaList />
+              </div>
+            </section>
 
-        {showQueue && (
-          <section className={styles.queue}>
-            <Queue onDoubleClickTrack={handlePlay} />
-          </section>
-        )}
+            {showQueue && (
+              <section className={styles.queue}>
+                <Queue onDoubleClickTrack={handlePlay} />
+              </section>
+            )}
+          </>
+        ) : null}
       </section>
 
       <section className={styles.bottom}>
