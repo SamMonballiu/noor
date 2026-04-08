@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import type { AlbumResponse } from "./models";
+import type { AlbumResponse, PlaylistMetadata } from "./models";
 
 export const useAlbumsQuery = (searchTerm?: string) =>
   useQuery<AlbumResponse>({
@@ -29,4 +29,15 @@ export const useAlbumCoverQuery = (path: string, enabled?: boolean) =>
     enabled,
     retryOnMount: false,
     retry: false,
+  });
+
+export const usePlaylistsMetadataQuery = () =>
+  useQuery<PlaylistMetadata[]>({
+    queryKey: ["playlists"],
+    queryFn: async () => {
+      const response = await axios.get<PlaylistMetadata[]>(
+        `${import.meta.env.VITE_DEVPREFIX}/api/playlists`,
+      );
+      return response.data;
+    },
   });

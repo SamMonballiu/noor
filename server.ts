@@ -11,9 +11,10 @@ import { QueryResolver } from "@queries/base";
 import fs from "fs";
 import chokidar from "chokidar";
 import { RepositoryContext } from "backend/context/repositoryContext";
-import { mapGetPlaylistsRoute } from "features/playlists/get/getPlaylistsRoute";
+import { mapGetPlaylistsMetadataRoute } from "features/playlists/get/getPlaylistsMetadataRoute";
 import { CommandBus } from "backend/commands/base";
 import { mapCreatePlaylistRoute } from "features/playlists/create/createPlaylistRoute";
+import { mapGetSinglePlaylistRoute } from "features/playlists/get/getSinglePlaylistRoute";
 
 const port = 54321;
 
@@ -49,7 +50,13 @@ repositories.initialize().then(() => {
   mapGetAlbumsRoute(apiRouter, dataContext, queryResolver, commandBus);
   mapGetCoverRoute(apiRouter, dataContext, queryResolver, commandBus);
   mapGetAudioRoute(apiRouter, dataContext, queryResolver, commandBus);
-  mapGetPlaylistsRoute(apiRouter, dataContext, queryResolver, commandBus);
+  mapGetPlaylistsMetadataRoute(
+    apiRouter,
+    dataContext,
+    queryResolver,
+    commandBus,
+  );
+  mapGetSinglePlaylistRoute(apiRouter, dataContext, queryResolver, commandBus);
 
   mapCreatePlaylistRoute(apiRouter, dataContext, queryResolver, commandBus);
 });

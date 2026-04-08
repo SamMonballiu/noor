@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { AlbumsQueryHandler } from "features/albums/get/getAlbumsQuery";
-import { PlaylistsQueryHandler } from "features/playlists/get/getPlaylistsQuery";
+import { PlaylistsMetadataQueryHandler } from "features/playlists/get/getPlaylistsMetadataQuery";
+import { SinglePlaylistQueryHandler } from "features/playlists/get/getSinglePlaylistQuery";
 import { DataContext } from "models/dataContext";
 
 export interface Query {}
@@ -40,7 +41,8 @@ export class QueryResolver {
   private readonly context: DataContext;
   private handlers: QueryHandler<any>[] = [
     new AlbumsQueryHandler(),
-    new PlaylistsQueryHandler(),
+    new PlaylistsMetadataQueryHandler(),
+    new SinglePlaylistQueryHandler(),
   ];
 
   constructor(context: DataContext) {
