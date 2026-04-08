@@ -1,0 +1,78 @@
+@use "../../mixins.scss";
+
+.container {
+  padding: 32px;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  user-select: none;
+
+  .details {
+    display: block;
+  }
+
+  h1,
+  h4,
+  h5 {
+    margin: 0;
+  }
+
+  h1 {
+    font-size: clamp(1rem, 12vw, 3rem);
+  }
+
+  h5 {
+    opacity: 0.5;
+  }
+}
+
+.cover {
+  img {
+    width: 8vw;
+    object-fit: contain;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 2px 2px 40px rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+  }
+}
+
+.tracks {
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4vh 0;
+  padding-left: 4vw;
+  padding-bottom: 0;
+  width: 60vw;
+}
+
+.selected {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+@media (orientation: portrait) {
+  .top {
+    gap: 16px;
+
+    h1 {
+      font-size: 7vw;
+    }
+  }
+
+  .cover {
+    img {
+      width: 20vw;
+    }
+  }
+
+  .tracks {
+    width: 90%;
+  }
+}

@@ -1,6 +1,6 @@
 import { FaList } from "react-icons/fa";
 import { MdMusicNote, MdPerson } from "react-icons/md";
-import type { ContextHandler } from "../components/ContextMenu/ContextMenu";
+import type { ContextHandler } from "../components/common/ContextMenu/ContextMenu";
 import type { AlbumData, Metadata } from "../models";
 import { useRouting } from "./useRouting";
 import { getMainArtist } from "../models/util";

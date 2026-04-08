@@ -1,5 +1,5 @@
 import { FaList } from "react-icons/fa";
-import type { ContextHandler } from "../components/ContextMenu/ContextMenu";
+import type { ContextHandler } from "../components/common/ContextMenu/ContextMenu";
 import { useTrackQueueContext } from "../contexts/TrackQueueContext";
 import type { Metadata } from "../models";
 

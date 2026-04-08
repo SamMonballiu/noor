@@ -1,27 +1,27 @@
 import { useEffect, useState, type FC } from "react";
 import styles from "./MainPage.module.scss";
-import { Spotlight } from "./components/Spotlight/Spotlight";
-import { AlbumsList } from "./components/AlbumsList/AlbumsList";
+import { Spotlight } from "./components/player/Spotlight/Spotlight";
+import { AlbumsList } from "./components/albums/AlbumsList/AlbumsList";
 import { Redirect, Route, Switch } from "wouter";
 import { routes, isValidArtistRoute } from "./routing";
-import { AlbumTrackList } from "./components/AlbumTrackList/AlbumTrackList";
+import { AlbumTrackList } from "./components/albums/AlbumTrackList/AlbumTrackList";
 //@ts-ignore
 import friendlyUrl from "friendly-url-extended";
 import { MdMusicNote, MdPerson } from "react-icons/md";
 import cx from "classnames";
 import type { AlbumDataWithTracks, Metadata } from "./models";
 import { useRouting } from "./hooks/useRouting";
-import { NowPlaying } from "./components/NowPlaying/NowPlaying";
-import { PlayerControls } from "./components/PlayerControls/PlayerControls";
-import { Volume } from "./components/Volume/Volume";
-import { Queue } from "./components/Queue/Queue";
+import { NowPlaying } from "./components/player/NowPlaying/NowPlaying";
+import { PlayerControls } from "./components/player/PlayerControls/PlayerControls";
+import { Volume } from "./components/player/Volume/Volume";
+import { Queue } from "./components/queue/Queue/Queue";
 import { useTrackQueueContext } from "./contexts/TrackQueueContext";
 import { FaList } from "react-icons/fa";
 import { useTrackContextMenu } from "./hooks/useTrackContextMenu";
-import { Input } from "./components/Input/Input";
-import { TrackProgressBar } from "./components/TrackProgressBar/TrackProgressBar";
-import { PlaylistList } from "./components/PlaylistList/PlaylistList";
-import { SinglePlaylist } from "./components/SinglePlaylist/SinglePlaylist";
+import { Input } from "./components/common/Input/Input";
+import { TrackProgressBar } from "./components/player/TrackProgressBar/TrackProgressBar";
+import { PlaylistList } from "./components/playlists/PlaylistList/PlaylistList";
+import { SinglePlaylist } from "./components/playlists/SinglePlaylist/SinglePlaylist";
 
 type Mode = "content" | "spotlight";
 

@@ -1,0 +1,16 @@
+@use "../../mixins.scss";
+
+.options {
+  @include mixins.flex();
+
+  font-size: 24px;
+  svg {
+    @include mixins.btn();
+  }
+}
+
+@media (orientation: portrait) {
+  .options {
+    display: none !important;
+  }
+}
