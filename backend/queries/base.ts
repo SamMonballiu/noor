@@ -1,5 +1,6 @@
 import { Response } from "express";
 import { AlbumsQueryHandler } from "features/albums/get/getAlbumsQuery";
+import { PlaylistsQueryHandler } from "features/playlists/get/getPlaylistsQuery";
 import { DataContext } from "models/dataContext";
 
 export interface Query {}
@@ -37,7 +38,10 @@ export class QueryResult<T> {
 
 export class QueryResolver {
   private readonly context: DataContext;
-  private handlers: QueryHandler<any>[] = [new AlbumsQueryHandler()];
+  private handlers: QueryHandler<any>[] = [
+    new AlbumsQueryHandler(),
+    new PlaylistsQueryHandler(),
+  ];
 
   constructor(context: DataContext) {
     this.context = context;

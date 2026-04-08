@@ -10,6 +10,8 @@ import { mapGetAudioRoute } from "./features/audio/get/getAudioRoute";
 import { QueryResolver } from "@queries/base";
 import fs from "fs";
 import chokidar from "chokidar";
+import { RepositoryContext } from "backend/context/repositoryContext";
+import { mapGetPlaylistsRoute } from "features/playlists/get/getPlaylistsRoute";
 
 const port = 54321;
 
@@ -30,15 +32,22 @@ app.use(
 const apiRouter = express.Router();
 app.use("/api", apiRouter);
 
-const dataContext: DataContext = {
+let dataContext: DataContext;
+const repositories = new RepositoryContext("./data.json");
+
+dataContext = {
   mediaFiles: [],
+  repositories,
 };
 
-const queryResolver = new QueryResolver(dataContext);
+repositories.initialize().then(() => {
+  const queryResolver = new QueryResolver(dataContext);
 
-mapGetAlbumsRoute(apiRouter, dataContext, queryResolver);
-mapGetCoverRoute(apiRouter, dataContext, queryResolver);
-mapGetAudioRoute(apiRouter, dataContext, queryResolver);
+  mapGetAlbumsRoute(apiRouter, dataContext, queryResolver);
+  mapGetCoverRoute(apiRouter, dataContext, queryResolver);
+  mapGetAudioRoute(apiRouter, dataContext, queryResolver);
+  mapGetPlaylistsRoute(apiRouter, dataContext, queryResolver);
+});
 
 // All other routes to be handled clientside
 app.get("*", (_, res: Response) => {
