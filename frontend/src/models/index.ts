@@ -18,3 +18,15 @@ export interface AlbumData {
   year?: number;
   path: string;
 }
+
+export interface PlaylistMetadata {
+  id: string;
+  name: string;
+  itemsCount: number;
+}
+
+export interface Playlist {
+  id: string;
+  name: string;
+  items: Metadata[];
+}

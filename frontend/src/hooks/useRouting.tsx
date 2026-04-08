@@ -2,6 +2,7 @@ import { useLocation, useRoute } from "wouter";
 import {
   routes,
   type ArtistAlbumRouteParams,
+  type PlaylistRouteParams,
   type RouteParams,
 } from "../routing";
 // @ts-ignore;
@@ -28,9 +29,17 @@ export const useRouting = () => {
       return `${window.location.origin}${route}`;
     }
 
+    // Remove last segment if it contains a colon
+    const segments = route.split("/");
+    if (segments[segments.length - 1]?.includes(":")) {
+      segments.pop();
+      route = segments.join("/");
+    }
+
     if (route.endsWith("?")) {
       route = route.slice(0, -1);
     }
+
     return route;
   };
 
@@ -59,7 +68,16 @@ export const useRouting = () => {
     });
   };
 
+  const navigateToPlaylist = (id: string) => {
+    navigateTo(routes.playlist, {
+      id,
+    });
+  };
+
   const [isAlbumsRoute] = useRoute<RouteParams>(routes.allAlbums);
+  const [isPlaylistsRoute, playlistRouteParams] = useRoute<PlaylistRouteParams>(
+    routes.playlist,
+  );
 
   const [isArtistRoute, artistRouteParams] = useRoute<ArtistAlbumRouteParams>(
     routes.artist,
@@ -68,6 +86,7 @@ export const useRouting = () => {
   const params = {
     album: isArtistRoute ? artistRouteParams.album : undefined,
     artist: isArtistRoute ? artistRouteParams.artist : undefined,
+    playlist: isPlaylistsRoute ? playlistRouteParams.id : undefined,
   };
 
   return {
@@ -75,11 +94,13 @@ export const useRouting = () => {
       to: navigateTo,
       toAlbum: navigateToAlbum,
       toArtist: navigateToArtist,
+      toPlaylist: navigateToPlaylist,
       getRoute,
     },
     route: {
       is: {
         allAlbums: isAlbumsRoute,
+        playlists: isPlaylistsRoute,
         artist: isArtistRoute,
         album: isArtistRoute && artistRouteParams.album !== undefined,
       },

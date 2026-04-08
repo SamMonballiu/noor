@@ -14,6 +14,7 @@ type TrackProps = Metadata & {
   showArtist: boolean;
   showNumber?: boolean;
   showCover?: boolean;
+  titleFallback?: string;
 };
 
 export const Track: FC<TrackProps> = ({
@@ -28,6 +29,7 @@ export const Track: FC<TrackProps> = ({
   showArtist,
   showNumber = false,
   showCover = false,
+  titleFallback,
 }) => {
   const { navigate } = useRouting();
   return (
@@ -48,7 +50,7 @@ export const Track: FC<TrackProps> = ({
       {showCover && <ImagePreview className={styles.cover} path={albumPath} />}
       <div>
         <div className={styles.title}>
-          <span>{title}</span>
+          <span>{title ?? titleFallback}</span>
         </div>
         {showArtist
           ? artists?.map((x, idx, arr) => (

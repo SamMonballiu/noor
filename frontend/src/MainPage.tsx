@@ -20,6 +20,8 @@ import { FaList } from "react-icons/fa";
 import { useTrackContextMenu } from "./hooks/useTrackContextMenu";
 import { Input } from "./components/Input/Input";
 import { TrackProgressBar } from "./components/TrackProgressBar/TrackProgressBar";
+import { PlaylistList } from "./components/PlaylistList/PlaylistList";
+import { SinglePlaylist } from "./components/SinglePlaylist/SinglePlaylist";
 
 type Mode = "content" | "spotlight";
 
@@ -79,6 +81,15 @@ export const MainPage: FC = () => {
         <div>
           <MdPerson style={{ opacity: 0.25 }} />
         </div>
+        <div
+          className={cx({ [styles.active]: route.is.playlists })}
+          onClick={() => {
+            setMode("content");
+            navigate.to(routes.playlist);
+          }}
+        >
+          <FaList />
+        </div>
       </section>
 
       <section className={styles.main}>
@@ -88,6 +99,19 @@ export const MainPage: FC = () => {
           })}
         >
           <Switch>
+            <Route path={routes.playlist}>
+              {route.params.playlist ? (
+                <SinglePlaylist
+                  id={route.params.playlist}
+                  onQueue={(tracks) => {
+                    setItems(tracks);
+                    setActiveItem(tracks[0]);
+                  }}
+                />
+              ) : (
+                <PlaylistList onSelect={navigate.toPlaylist} />
+              )}
+            </Route>
             <Route path={routes.allAlbums}>
               <section className={styles.input}>
                 <Input value={searchTerm} onChange={setSearchTerm} />
