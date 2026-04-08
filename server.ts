@@ -12,6 +12,8 @@ import fs from "fs";
 import chokidar from "chokidar";
 import { RepositoryContext } from "backend/context/repositoryContext";
 import { mapGetPlaylistsRoute } from "features/playlists/get/getPlaylistsRoute";
+import { CommandBus } from "backend/commands/base";
+import { mapCreatePlaylistRoute } from "features/playlists/create/createPlaylistRoute";
 
 const port = 54321;
 
@@ -42,11 +44,14 @@ dataContext = {
 
 repositories.initialize().then(() => {
   const queryResolver = new QueryResolver(dataContext);
+  const commandBus = new CommandBus(dataContext.repositories);
 
-  mapGetAlbumsRoute(apiRouter, dataContext, queryResolver);
-  mapGetCoverRoute(apiRouter, dataContext, queryResolver);
-  mapGetAudioRoute(apiRouter, dataContext, queryResolver);
-  mapGetPlaylistsRoute(apiRouter, dataContext, queryResolver);
+  mapGetAlbumsRoute(apiRouter, dataContext, queryResolver, commandBus);
+  mapGetCoverRoute(apiRouter, dataContext, queryResolver, commandBus);
+  mapGetAudioRoute(apiRouter, dataContext, queryResolver, commandBus);
+  mapGetPlaylistsRoute(apiRouter, dataContext, queryResolver, commandBus);
+
+  mapCreatePlaylistRoute(apiRouter, dataContext, queryResolver, commandBus);
 });
 
 // All other routes to be handled clientside
