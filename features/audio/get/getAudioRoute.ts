@@ -3,7 +3,7 @@ import { RouteRegistrar } from "../../../models/routeRegistrar";
 import fs from "fs";
 import path from "path";
 
-export const mapGetAudioRoute: RouteRegistrar = (router, dataContext) => {
+export const mapGetAudioRoute: RouteRegistrar = ({ router, dataContext }) => {
   router.get("/audio", async (req: Request, res: Response) => {
     const trackPath = req.query.path as string;
 

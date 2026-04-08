@@ -5,12 +5,10 @@ import { CreatePlaylistCommand } from "./createPlaylistCommand";
 
 type PlaylistPostmodel = Omit<Playlist, "id">;
 
-export const mapCreatePlaylistRoute: RouteRegistrar = (
+export const mapCreatePlaylistRoute: RouteRegistrar = ({
   router,
-  _,
-  __,
   commandBus,
-) => {
+}) => {
   router.post("/playlists", async (req: Request, res: Response) => {
     const postmodel = req.body as PlaylistPostmodel;
 

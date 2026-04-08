@@ -15,6 +15,7 @@ import { mapGetPlaylistsMetadataRoute } from "features/playlists/get/getPlaylist
 import { CommandBus } from "backend/commands/base";
 import { mapCreatePlaylistRoute } from "features/playlists/create/createPlaylistRoute";
 import { mapGetSinglePlaylistRoute } from "features/playlists/get/getSinglePlaylistRoute";
+import { RegistrarArgs } from "models/routeRegistrar";
 
 const port = 54321;
 
@@ -47,18 +48,20 @@ repositories.initialize().then(() => {
   const queryResolver = new QueryResolver(dataContext);
   const commandBus = new CommandBus(dataContext.repositories);
 
-  mapGetAlbumsRoute(apiRouter, dataContext, queryResolver, commandBus);
-  mapGetCoverRoute(apiRouter, dataContext, queryResolver, commandBus);
-  mapGetAudioRoute(apiRouter, dataContext, queryResolver, commandBus);
-  mapGetPlaylistsMetadataRoute(
-    apiRouter,
+  const args: RegistrarArgs = {
+    router: apiRouter,
     dataContext,
     queryResolver,
     commandBus,
-  );
-  mapGetSinglePlaylistRoute(apiRouter, dataContext, queryResolver, commandBus);
+  };
 
-  mapCreatePlaylistRoute(apiRouter, dataContext, queryResolver, commandBus);
+  mapGetAlbumsRoute(args);
+  mapGetCoverRoute(args);
+  mapGetAudioRoute(args);
+  mapGetPlaylistsMetadataRoute(args);
+  mapGetSinglePlaylistRoute(args);
+
+  mapCreatePlaylistRoute(args);
 });
 
 // All other routes to be handled clientside

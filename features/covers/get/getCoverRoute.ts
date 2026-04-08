@@ -4,7 +4,7 @@ import { generateThumbnail } from "./thumbnail";
 import path from "path";
 const { fdir } = require("fdir");
 
-export const mapGetCoverRoute: RouteRegistrar = (router) => {
+export const mapGetCoverRoute: RouteRegistrar = ({ router }) => {
   router.get("/cover", async (req: Request, res: Response) => {
     const albumPath = req.query.albumPath;
     const baseUrl = process.env.MEDIA_PATH!;
