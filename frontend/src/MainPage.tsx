@@ -22,6 +22,7 @@ import { Input } from "./components/common/Input/Input";
 import { TrackProgressBar } from "./components/player/TrackProgressBar/TrackProgressBar";
 import { PlaylistList } from "./components/playlists/PlaylistList/PlaylistList";
 import { SinglePlaylist } from "./components/playlists/SinglePlaylist/SinglePlaylist";
+import { useQuerystringSync } from "./hooks/useQuerystringSync";
 
 type Mode = "content" | "spotlight";
 
@@ -39,8 +40,10 @@ export const MainPage: FC = () => {
     setVolume,
     isPlaying,
   } = useTrackQueueContext();
-  const [searchTerm, setSearchTerm] = useState("");
-
+  const [searchTerm, setSearchTerm] = useQuerystringSync<string>(
+    "searchTerm",
+    "",
+  );
   const { play, togglePlayPause, seek } = audioPlayer;
 
   const trackContextMenu = useTrackContextMenu();
