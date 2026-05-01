@@ -8,4 +8,5 @@ export interface Metadata {
   duration?: number;
   path: string;
   albumPath: string;
+  size: number;
 }

@@ -4,6 +4,7 @@ import {
   CommandHandleResult,
 } from "backend/commands/base";
 import { RepositoryContext, setId } from "backend/context/repositoryContext";
+import { DataContext } from "models/dataContext";
 import { Playlist } from "models/playlist";
 
 export class CreatePlaylistCommand implements Command {
@@ -17,9 +18,9 @@ export class CreatePlaylistCommand implements Command {
 }
 
 export class CreatePlaylistCommandHandler implements CommandHandler<CreatePlaylistCommand> {
-  private readonly dataContext: RepositoryContext;
+  private readonly dataContext: DataContext;
 
-  constructor(dataContext: RepositoryContext) {
+  constructor(dataContext: DataContext) {
     this.dataContext = dataContext;
   }
 
@@ -29,13 +30,17 @@ export class CreatePlaylistCommandHandler implements CommandHandler<CreatePlayli
     const playlist: Playlist = {
       id: "",
       name: command.name,
-      itemPaths: command.itemPaths,
+      itemSizes: command.itemPaths.reduce((acc, val) => {
+        const item = this.dataContext.mediaFiles.find((x) => x.path === val);
+        if (item) acc.push(item.size);
+        return acc;
+      }, [] as number[]),
     };
 
     setId(playlist);
 
-    this.dataContext.models.playlists.add(playlist.id, playlist);
-    await this.dataContext.saveChanges();
+    this.dataContext.repositories.models.playlists.add(playlist.id, playlist);
+    await this.dataContext.repositories.saveChanges();
     return CommandHandleResult.Success;
   }
 }

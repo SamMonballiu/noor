@@ -1,5 +1,6 @@
 import { Query, QueryHandler, QueryResult } from "@queries/base";
-import { DataContext } from "models/dataContext";
+import { DataContext, getFileBySize } from "models/dataContext";
+import { Metadata } from "models/metadata";
 
 export class SinglePlaylistQuery implements Query {
   public readonly id: string;
@@ -22,9 +23,9 @@ export class SinglePlaylistQueryHandler implements QueryHandler<SinglePlaylistQu
     return QueryResult.Success({
       id: playlist.id,
       name: playlist.name,
-      items: dataContext.mediaFiles.filter((x) =>
-        playlist.itemPaths.includes(x.path),
-      ),
+      items: playlist.itemSizes
+        .map((size) => getFileBySize(dataContext, size))
+        .filter((x) => x !== undefined) as Metadata[],
     });
   }
 }

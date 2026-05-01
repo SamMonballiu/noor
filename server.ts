@@ -46,7 +46,7 @@ dataContext = {
 
 repositories.initialize().then(() => {
   const queryResolver = new QueryResolver(dataContext);
-  const commandBus = new CommandBus(dataContext.repositories);
+  const commandBus = new CommandBus(dataContext);
 
   const args: RegistrarArgs = {
     router: apiRouter,

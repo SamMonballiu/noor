@@ -1,6 +1,7 @@
 import { RepositoryContext } from "backend/context/repositoryContext";
 import { Response } from "express";
 import { CreatePlaylistCommandHandler } from "features/playlists/create/createPlaylistCommand";
+import { DataContext } from "models/dataContext";
 
 export interface Command {}
 
@@ -63,14 +64,14 @@ export class CommandValidateResult {
 }
 
 export class CommandBus {
-  private readonly context: RepositoryContext;
+  private readonly context: DataContext;
   private validators: CommandValidator<any>[] = [];
   private handlers: CommandHandler<any>[] = [];
 
-  constructor(context: RepositoryContext) {
+  constructor(context: DataContext) {
     this.context = context;
 
-    this.context.initialize().then(() => {
+    this.context.repositories.initialize().then(() => {
       this.validators = [];
 
       this.handlers = [new CreatePlaylistCommandHandler(this.context)];

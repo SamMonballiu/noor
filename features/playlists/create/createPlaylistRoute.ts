@@ -3,7 +3,9 @@ import { Request, Response } from "express";
 import { Playlist } from "models/playlist";
 import { CreatePlaylistCommand } from "./createPlaylistCommand";
 
-type PlaylistPostmodel = Omit<Playlist, "id">;
+type PlaylistPostmodel = Omit<Playlist, "id" | "itemSizes"> & {
+  itemPaths: string[];
+};
 
 export const mapCreatePlaylistRoute: RouteRegistrar = ({
   router,

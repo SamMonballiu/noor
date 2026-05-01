@@ -15,7 +15,7 @@ export class PlaylistsMetadataQueryHandler implements QueryHandler<PlaylistsMeta
         ({
           id: pl.id,
           name: pl.name,
-          itemsCount: pl.itemPaths.length,
+          itemsCount: pl.itemSizes?.length ?? 0,
         }) as PlaylistMetadata,
     );
     return QueryResult.Success(result);
